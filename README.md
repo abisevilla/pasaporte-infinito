@@ -37,6 +37,11 @@ exploración en el backend. Las respuestas requieren confirmación; mantener Ent
 no envía acciones sucesivas. Tras cada respuesta hay una pantalla de explicación antes
 de continuar. El ratón y los controles táctiles siguen disponibles.
 
+Al superar las tres preguntas de un destino, la explicación de la respuesta da paso a
+«¡Ruta completada!»: un sellador baja sobre el pasaporte y deja el sello de esa ciudad.
+Enter permite elegir el siguiente destino o ver el epílogo tras el tercer sello. La
+preferencia del sistema de reducir movimiento muestra el sello sin animación.
+
 ## Ejecutar en local
 
 Requisitos comprobados: Python **3.15.2**, Node **24** y npm. Desde la raíz:

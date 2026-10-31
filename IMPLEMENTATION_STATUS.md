@@ -4,6 +4,8 @@ Actualización: 30 de octubre de 2026. Implementación local autorizada; publica
 
 ## Refactor de pantallas y teclado
 
+- Celebración al ganar cada sello: mensaje «¡Ruta completada!», pasaporte abierto y animación de aplicación del sello de la ciudad. Se activa únicamente tras confirmar el servidor un sello nuevo, incluido el tercero antes del epílogo. Continuación con Enter y alternativa sin movimiento.
+
 - Interfaz SPA a altura de ventana, sin scroll vertical: inicio, destinos, mapa, escenas, desafío, explicación de respuesta, epílogo, cuaderno, fuentes y ayuda separados.
 - Texto paginado con medición del espacio real y adaptación al redimensionar; las fuentes largas también se reparten en páginas.
 - Flechas para selección y lectura, Enter para confirmar, Escape/Retroceso para volver, H para ayuda y J para cuaderno. Tab y controles de ratón/táctiles conservados.

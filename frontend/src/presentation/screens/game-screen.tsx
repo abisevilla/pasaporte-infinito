@@ -10,6 +10,7 @@ import { Adventure } from "../components/game/adventure";
 import { DestinationPicker } from "../components/game/destination-picker";
 import { Journal, Sources } from "../components/game/journal";
 import { PagedReader } from "../components/game/paged-reader";
+import { PassportStamp } from "../components/game/passport-stamp";
 import { KeyboardGuide } from "../components/game/keyboard-guide";
 
 type Screen =
@@ -20,6 +21,7 @@ type Screen =
   | "journal"
   | "sources"
   | "map"
+  | "stamp"
   | "feedback"
   | "adventure";
 const helpText =
@@ -35,6 +37,10 @@ export function GameScreen() {
   const [mapSelection, setMapSelection] = useState<string | null>(null);
   const [readingSceneId, setReadingSceneId] = useState<string | null>(null);
   const [journalIndex, setJournalIndex] = useState(0);
+  const [earnedStamp, setEarnedStamp] = useState<{
+    gameId: string;
+    cityId: string;
+  } | null>(null);
   const root = useRef<HTMLDivElement>(null);
   const view = screen === "home" ? (game ? "adventure" : "welcome") : screen;
   const error = catalog.error ?? current.error ?? create.error ?? action.error;
@@ -72,6 +78,7 @@ export function GameScreen() {
           setMapSelection(null);
           setReadingSceneId(null);
           setJournalIndex(0);
+          setEarnedStamp(null);
           setScreen("home");
           setHistory([]);
         },
@@ -89,6 +96,12 @@ export function GameScreen() {
         setReadingSceneId(null);
       }
       if (decision.type === "answerQuestion") {
+        const newStamp = updated.stamps.find(
+          (cityId) => !game?.stamps.includes(cityId),
+        );
+        setEarnedStamp(
+          newStamp ? { gameId: updated.id, cityId: newStamp } : null,
+        );
         setScreen("feedback");
         setHistory([]);
       }
@@ -277,6 +290,19 @@ export function GameScreen() {
         onBack={view === "destinations" ? back : () => open("journal")}
       />
     );
+  else if (view === "stamp" && game && earnedStamp?.gameId === game.id)
+    content = (
+      <PassportStamp
+        key={`${earnedStamp.gameId}-${earnedStamp.cityId}`}
+        game={game}
+        cityId={earnedStamp.cityId}
+        onContinue={() => {
+          setEarnedStamp(null);
+          setHistory([]);
+          setScreen("home");
+        }}
+      />
+    );
   else if (view === "feedback" && game?.feedback)
     content = (
       <section className="screen feedback-screen">
@@ -303,7 +329,9 @@ export function GameScreen() {
           <Button
             data-primary
             data-screen-next
-            onClick={() => setScreen("home")}
+            onClick={() =>
+              setScreen(earnedStamp?.gameId === game.id ? "stamp" : "home")
+            }
           >
             Continuar →
           </Button>
