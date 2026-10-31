@@ -123,7 +123,7 @@ test("tres ciudades, epílogo y cuaderno", async ({ page }, info) => {
 });
 test("tercer error, reinicio y selección sin origen preseleccionado", async ({
   page,
-}) => {
+}, info) => {
   await begin(page, "Madrid");
   await explore(page);
   for (let index = 0; index < 3; index++) {
@@ -134,6 +134,65 @@ test("tercer error, reinicio y selección sin origen preseleccionado", async ({
   await expect(
     page.getByRole("heading", { name: "Este viaje termina aquí." }),
   ).toBeVisible();
+  const cover = page.locator(".journey-end-cover");
+  await expect(cover).toBeVisible();
+  expect(
+    await cover.evaluate((element) =>
+      element
+        .getAnimations()
+        .map((animation) => (animation as CSSAnimation).animationName),
+    ),
+  ).toContain("journey-passport-close");
+  await cover.evaluate((element) =>
+    Promise.all(element.getAnimations().map((animation) => animation.finished)),
+  );
+  await fitsViewport(page);
+  await page.screenshot({
+    path: info.outputPath("fin-del-viaje.png"),
+    scale: "css",
+  });
+  const originalCover = await cover.elementHandle();
+  await page.keyboard.press("j");
+  await expect(
+    page.getByRole("heading", { name: "Tu cuaderno de viaje" }),
+  ).toBeVisible();
+  await page.keyboard.press("j");
+  await expect(cover).toBeVisible();
+  expect(await originalCover!.evaluate((element) => element.isConnected)).toBe(
+    false,
+  );
+  expect(
+    await cover.evaluate((element) =>
+      element
+        .getAnimations()
+        .map((animation) => (animation as CSSAnimation).animationName),
+    ),
+  ).toContain("journey-passport-close");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect
+    .poll(() => cover.evaluate((element) => element.getAnimations().length))
+    .toBe(0);
+  await expect(cover).toHaveCSS("transform", "none");
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  for (const viewport of [
+    { width: 320, height: 480 },
+    { width: 844, height: 390 },
+    { width: 320, height: 568 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await fitsViewport(page);
+  }
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Este viaje termina aquí." }),
+  ).toBeVisible();
+  await expect(cover).toBeVisible();
   await page.getByRole("button", { name: "Comenzar otra aventura" }).click();
   await expect(
     page.getByRole("button", { name: "Comenzar mi viaje" }),

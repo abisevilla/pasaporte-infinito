@@ -1170,3 +1170,185 @@ main {
     transform: rotate(-12deg);
   }
 }
+
+.failure-ending-body {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(12px, 3vw, 38px);
+}
+.failure-ending-body > .paged-reader {
+  flex: 1.3 1 0;
+}
+.journey-end-art {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  perspective: 850px;
+}
+.journey-end-route {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: #a4ae96;
+}
+.journey-end-line {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: journey-route-close 1.6s ease both;
+}
+.journey-end-marker {
+  stroke: var(--terracotta);
+  stroke-width: 2;
+  fill: var(--paper);
+  transform-origin: 385px 70px;
+  animation: journey-marker-settle 1.5s ease both;
+}
+.journey-end-book {
+  position: relative;
+  width: min(60%, 220px);
+  height: min(82%, 280px);
+  max-height: 100%;
+  aspect-ratio: 0.72;
+  filter: drop-shadow(5px 9px 5px #203f4924);
+}
+.journey-end-pages {
+  position: absolute;
+  inset: 5px -4px 4px 4px;
+  border-radius: 4px 12px 12px 4px;
+  border: 1px solid #c3bea7;
+  background: repeating-linear-gradient(0deg, #ece7d7 0 3px, #d8d2be 3px 4px);
+}
+.journey-end-cover {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  border-radius: 4px 12px 12px 4px;
+  padding: 10px;
+  color: #d8c49b;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  animation: journey-passport-close 1.5s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+}
+.journey-end-cover-border {
+  height: 100%;
+  border: 1px solid #c4ac7480;
+  border-radius: 2px 7px 7px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+.journey-end-cover-border > svg {
+  width: 42%;
+  height: 32%;
+}
+.journey-end-cover-border > span {
+  font:
+    clamp(10px, 1.6vw, 18px)/1.45 Georgia,
+    serif;
+  letter-spacing: 0.08em;
+}
+.journey-end-cover-border > .journey-end-star {
+  font-size: 12px;
+}
+.ending-screen.is-failed > .screen-heading {
+  animation: journey-ending-arrive 0.55s ease both;
+}
+@keyframes journey-passport-close {
+  from {
+    transform: rotateY(-125deg);
+  }
+  70% {
+    transform: rotateY(5deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
+@keyframes journey-route-close {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0.25;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+@keyframes journey-marker-settle {
+  0%,
+  35% {
+    opacity: 0.2;
+    transform: scale(0.65);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes journey-ending-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 640px) and (min-height: 521px) {
+  .failure-ending-body {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .journey-end-art {
+    flex: 0.8 1 0;
+  }
+  .journey-end-book {
+    width: min(42%, 150px);
+    height: min(90%, 190px);
+  }
+  .journey-end-cover-border {
+    gap: 5px;
+  }
+}
+@media (max-height: 520px) {
+  .journey-end-cover {
+    padding: 6px;
+  }
+  .journey-end-cover-border {
+    gap: 5px;
+  }
+  .journey-end-cover-border > .journey-end-star {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-end-cover {
+    transform: none;
+  }
+  .journey-end-line {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  .journey-end-marker,
+  .ending-screen.is-failed > .screen-heading {
+    opacity: 1;
+    transform: none;
+  }
+}

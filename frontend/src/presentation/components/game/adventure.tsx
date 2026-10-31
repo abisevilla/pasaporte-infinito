@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Game, GameAction, Scene } from "@/shared/types";
 import { Button } from "../ui/button";
 import { PagedReader } from "./paged-reader";
+import { JourneyEndArt } from "./journey-end-art";
 import { LandmarkArt } from "./landmark-art";
 
 export function Adventure({
@@ -38,7 +39,9 @@ export function Adventure({
   const question = game.question;
   if (game.phase === "finished")
     return (
-      <section className="screen ending-screen">
+      <section
+        className={`screen ending-screen ${game.status === "failed" ? "is-failed" : ""}`}
+      >
         <div className="screen-heading">
           <p className="eyebrow">
             {game.status === "completed"
@@ -58,13 +61,20 @@ export function Adventure({
             </span>
           ))}
         </div>
-        <PagedReader
-          label="Epílogo"
-          text={
-            game.epilogue ??
-            "Has alcanzado tres errores en esta ciudad. Puedes repasar tu cuaderno y comenzar otra aventura desde cualquiera de los seis destinos."
-          }
-        />
+        {game.status === "failed" ? (
+          <div className="failure-ending-body">
+            <JourneyEndArt />
+            <PagedReader
+              label="Fin del viaje"
+              text="Has alcanzado tres errores en esta ciudad. Puedes repasar tu cuaderno y comenzar otra aventura desde cualquiera de los seis destinos."
+            />
+          </div>
+        ) : (
+          <PagedReader
+            label="Epílogo"
+            text={game.epilogue ?? "Has completado tu aventura."}
+          />
+        )}
         <div className="screen-actions">
           <Button variant="outline" onClick={onJournal}>
             Abrir cuaderno de viaje

@@ -1,8 +1,10 @@
 # Estado de implementación — Pasaporte Infinito
 
-Actualización: 30 de octubre de 2026. Implementación local autorizada; publicación externa fuera de esta entrega.
+Actualización: 31 de octubre de 2026. Implementación local autorizada; publicación externa fuera de esta entrega.
 
 ## Refactor de pantallas y teclado
+
+- Pantalla de derrota con cierre animado del pasaporte, trazado de ruta y entrada del mensaje cada vez que aparece. Verificados regreso desde el cuaderno, recarga, movimiento reducido, accesibilidad y ventanas pequeñas sin scroll.
 
 - Celebración al ganar cada sello: mensaje «¡Ruta completada!», pasaporte abierto y animación de aplicación del sello de la ciudad. Se activa únicamente tras confirmar el servidor un sello nuevo, incluido el tercero antes del epílogo. Continuación con Enter y alternativa sin movimiento.
 

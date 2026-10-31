@@ -42,6 +42,11 @@ Al superar las tres preguntas de un destino, la explicación de la respuesta da 
 Enter permite elegir el siguiente destino o ver el epílogo tras el tercer sello. La
 preferencia del sistema de reducir movimiento muestra el sello sin animación.
 
+La pantalla «Este viaje termina aquí» reproduce un cierre del pasaporte, un trazado de
+ruta y una entrada suave del mensaje cada vez que se abre, también al volver del cuaderno
+o recuperar una partida terminada. Los botones permanecen disponibles durante el efecto;
+con movimiento reducido se muestra la ilustración estática.
+
 ## Ejecutar en local
 
 Requisitos comprobados: Python **3.15.2**, Node **24** y npm. Desde la raíz:
