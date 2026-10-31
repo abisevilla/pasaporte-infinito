@@ -1,0 +1,5 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json", "style": "new-york", "rsc": false, "tsx": true,
+  "tailwind": {"config": "", "css": "src/presentation/styles.css", "baseColor": "stone", "cssVariables": true},
+  "aliases": {"components": "@/presentation/components", "utils": "@/shared/utils", "ui": "@/presentation/components/ui", "lib": "@/shared", "hooks": "@/business/game"}
+}

@@ -1,0 +1,6 @@
+node_modules
+dist
+src/shared/api-schema.ts
+src/assets/world.geo.json
+playwright-report
+test-results
