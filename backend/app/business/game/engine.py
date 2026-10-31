@@ -202,4 +202,17 @@ def publicState(state: GameState, catalog: dict) -> dict[str, Any]:
         "questionNumber": sum(q["id"] in state.answeredQuestionIds for q in city["questions"]) + 1,
         "journal": journal,
         "feedback": state.feedback,
+        "epilogue": buildEpilogue(state, catalog) if state.status == "completed" else None,
     }
+
+
+def buildEpilogue(state: GameState, catalog: dict) -> str:
+    cities = [getCity(catalog, cityId) for cityId in state.itinerary]
+    names = " → ".join(city["name"] for city in cities)
+    landmarks = ", ".join(city["landmark"] for city in cities)
+    return (
+        f"Tu itinerario: {names}. Tres ciudades, tres sellos y una colección de detalles "
+        f"para volver a mirar: {landmarks}. Has completado los tres desafíos culturales. "
+        "El cuaderno conserva las escenas y sus fuentes; tu próximo viaje puede empezar "
+        "en cualquiera de las seis ciudades."
+    )

@@ -1,65 +1,141 @@
 # Pasaporte Infinito
 
-Aventura cultural individual en español con React y FastAPI. Proyecto en implementación:
-el entorno del backend está preparado, pero todavía faltan el catálogo cultural y la interfaz.
+Aventura cultural individual en español con seis destinos reales: Madrid, Barcelona,
+París, Roma, Nueva York y Washington D. C. Elige libremente tu origen, explora tres escenas
+y responde tres preguntas por ciudad. Tres errores en un destino terminan la partida;
+al viajar el contador se reinicia. Tres sellos completan el itinerario y generan su epílogo.
 
-## Entorno local
+El juego incluye 18 escenas y 18 preguntas documentadas, 120 itinerarios, mapa con zoom y
+vistas regionales, selección por lista, cuaderno y recuperación del progreso mediante una
+cookie anónima HttpOnly. No necesita cuentas ni servicios de generación de contenido.
 
-Python verificado: **3.15.2**. Ejecuta desde la raíz:
+## Ejecutar en local
+
+Requisitos comprobados: Python **3.15.2**, Node **24** y npm. Desde la raíz:
 
 ```sh
-python3 --version
 python3 -m venv .venv
 .venv/bin/python -m pip install -r backend/requirements.txt
 .venv/bin/python -m pip check
 ```
 
-`backend/requirements.in` declara los rangos de dependencias; `backend/requirements.txt`
-fija las versiones instaladas. La instalación se ha comprobado en macOS con Apple Silicon.
-
-Desde `backend/`, prepara SQLite y ejecuta las comprobaciones:
+En una terminal, desde `backend/`:
 
 ```sh
 ../.venv/bin/alembic upgrade head
-../.venv/bin/python -m pytest
-../.venv/bin/ruff check .
-../.venv/bin/ruff format --check .
+PUBLIC_ORIGIN=http://127.0.0.1:5173 ../.venv/bin/python -m uvicorn app.main:app --reload
 ```
 
-SQLite se guarda en `backend/data/pasaporte.sqlite3` y queda excluido de Git.
-Las migraciones crean el esquema; la aplicación no lo crea automáticamente.
-
-Cuando exista `backend/app/data/content/v1.json`, se podrá iniciar la API desde `backend/`:
-
-```sh
-../.venv/bin/python -m uvicorn app.main:app --reload
-```
-
-El arranque completo valida el catálogo cultural. Mientras falte ese archivo, el servidor
-no puede completar el inicio. La documentación de la API estará en `/docs`.
-
-## Frontend
-
-Desde `frontend/`:
+En otra terminal, desde `frontend/`:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-El manifiesto ya está preparado; `src/` sigue pendiente de implementación.
-Los comandos configurados incluyen `npm test`, `npm run lint`, `npm run format:check`
-y `npm run build`. Todavía no se ha verificado una aplicación frontend ejecutable.
+Abre **http://127.0.0.1:5173**. Vite reenvía `/api` a la API en el puerto 8000.
+La documentación HTTP está en **http://127.0.0.1:8000/docs**.
+SQLite se guarda en `backend/data/pasaporte.sqlite3`. Las migraciones crean el esquema;
+la aplicación valida el catálogo durante el arranque. El backend es la única autoridad
+sobre respuestas, errores, rutas y versiones del estado.
 
 ## Configuración
 
-El backend utiliza variables del proceso y no carga archivos `.env` automáticamente:
+La aplicación utiliza variables del proceso; no carga archivos `.env` automáticamente.
+`.env.example` documenta valores locales sin secretos.
 
-- `DATABASE_URL`: por defecto `sqlite:///./data/pasaporte.sqlite3`, relativo al directorio de ejecución.
-- `PUBLIC_ORIGIN`: origen permitido para solicitudes que modifican la partida; por defecto el origen de la API.
-- `COOKIE_SECURE`: `true` para cookies HTTPS; por defecto `false` durante desarrollo local.
-- `STATIC_DIR`: directorio de la compilación frontend, cuando esté disponible.
+| Variable | Valor por defecto / uso |
+| --- | --- |
+| `DATABASE_URL` | `sqlite:///./data/pasaporte.sqlite3`, relativo al directorio de ejecución |
+| `PUBLIC_ORIGIN` | Origen de la API; para un proxy con otro origen, indicar el origen público |
+| `COOKIE_SECURE` | `false` en local; usar `true` al servir mediante HTTPS |
+| `STATIC_DIR` | `frontend/dist` del repositorio |
 
-No se necesitan claves externas para el juego. No publiques archivos de entorno ni bases de datos.
+El progreso está en el servidor; la cookie identifica tu partida durante 180 días.
+Si borras la cookie o cambias de navegador no podrás recuperar esa identidad anónima.
+No se ofrece modo sin conexión. Un conflicto entre pestañas recupera el estado vigente;
+los reintentos de red de una misma solicitud conservan su UUID para no repetir efectos.
 
-El contrato aprobado y los próximos pasos están en [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+## Compilación y entrega local
+
+Desde `frontend/`:
+
+```sh
+npm run build
+```
+
+Para servir la compilación desde FastAPI, inicia desde `backend/` sin la variable de origen de Vite:
+
+```sh
+../.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Abre **http://127.0.0.1:8000**. El frontend y la API comparten entonces el mismo origen.
+
+Se incluye un contenedor con un volumen persistente:
+
+```sh
+docker compose up --build
+```
+
+Abre **http://127.0.0.1:8000**. El contenedor aplica las migraciones y se ejecuta con un
+usuario sin privilegios. `game-data` conserva SQLite al recrear el servicio. No elimines
+ese volumen si quieres conservar las partidas. Docker requiere una comprobación en un
+entorno que lo tenga instalado; no se ha ejecutado aquí. No se ha publicado externamente.
+
+## Verificación
+
+Desde `backend/`:
+
+```sh
+../.venv/bin/python -m pytest
+../.venv/bin/ruff check .
+../.venv/bin/ruff format --check .
+```
+
+Desde `frontend/`:
+
+```sh
+npm test
+npm run lint
+npm run format:check
+npm run build
+npx playwright install chromium
+npm run test:e2e
+npm audit
+```
+
+Playwright comprueba los seis orígenes, recuperación, tres sellos, epílogo, cuaderno y
+reinicio tras derrota, en escritorio y móvil. Cuando inicia su propia API utiliza
+`backend/data/e2e.sqlite3`. No ejecutes las pruebas contra un servidor con partidas importantes:
+para aislarlas, detén tus servidores locales y deja que Playwright inicie los suyos.
+
+La integración continua en `.github/workflows/verify.yml` ejecuta estas comprobaciones
+con Python 3.15 y Node 24. Su resultado remoto queda pendiente de ejecutar en GitHub.
+
+## Contratos y dependencias
+
+Después de modificar los contratos HTTP, desde `backend/`:
+
+```sh
+../.venv/bin/python -m scripts.export_openapi
+```
+
+Después, desde `frontend/`, ejecuta `npm run api:types` y versiona ambos archivos generados.
+No edites manualmente `src/shared/api-schema.ts`.
+
+`backend/requirements.in` contiene los rangos; `backend/requirements.txt` fija el entorno
+instalado en macOS Apple Silicon. La compatibilidad con Linux se comprobará en CI y Docker.
+Los overrides npm fijan versiones corregidas de minimatch y undici en las herramientas de
+lint/generación; se verifican con lint, generación de tipos y build. No se usa `audit fix --force`.
+
+## Contenido y recursos
+
+El catálogo versionado está en `backend/app/data/content/v1.json`. Cada escena y pregunta
+incluye fuentes oficiales y fecha de revisión; los textos son redacciones originales en
+español. Las respuestas correctas permanecen en el backend y no se envían al cliente.
+Las ilustraciones de monumentos son SVG originales; la cartografía Natural Earth es de
+dominio público y se incluye localmente. Consulta `frontend/src/assets/LICENSE.md`.
+
+El objetivo de 20–30 minutos y la dificultad siguen pendientes de validación con jugadores.
+Las verificaciones automáticas no sustituyen una evaluación completa con lectores de pantalla.

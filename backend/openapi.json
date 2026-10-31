@@ -1,0 +1,887 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Pasaporte Infinito",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog": {
+      "get": {
+        "summary": "Getcatalog",
+        "operationId": "getCatalog_api_v1_catalog_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/games/current": {
+      "get": {
+        "summary": "Getcurrent",
+        "operationId": "getCurrent_api_v1_games_current_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSnapshot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/games": {
+      "post": {
+        "summary": "Newgame",
+        "operationId": "newGame_api_v1_games_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewGameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSnapshot"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/games/current/actions": {
+      "post": {
+        "summary": "Act",
+        "operationId": "act_api_v1_games_current_actions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSnapshot"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActionRequest": {
+        "properties": {
+          "gameId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Gameid"
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Requestid"
+          },
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Expectedversion"
+          },
+          "action": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExploreAction"
+              },
+              {
+                "$ref": "#/components/schemas/AnswerAction"
+              },
+              {
+                "$ref": "#/components/schemas/TravelAction"
+              }
+            ],
+            "title": "Action",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "answerQuestion": "#/components/schemas/AnswerAction",
+                "chooseRoute": "#/components/schemas/TravelAction",
+                "exploreScene": "#/components/schemas/ExploreAction"
+              }
+            }
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "gameId",
+          "requestId",
+          "expectedVersion",
+          "action"
+        ],
+        "title": "ActionRequest"
+      },
+      "AnswerAction": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "answerQuestion",
+            "title": "Type"
+          },
+          "questionId": {
+            "type": "string",
+            "title": "Questionid"
+          },
+          "optionId": {
+            "type": "string",
+            "title": "Optionid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "questionId",
+          "optionId"
+        ],
+        "title": "AnswerAction"
+      },
+      "CatalogResponse": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "cities": {
+            "items": {
+              "$ref": "#/components/schemas/City"
+            },
+            "type": "array",
+            "title": "Cities"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version",
+          "cities"
+        ],
+        "title": "CatalogResponse"
+      },
+      "City": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "region": {
+            "type": "string",
+            "enum": [
+              "europe",
+              "usa"
+            ],
+            "title": "Region"
+          },
+          "coordinates": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Coordinates"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "landmark": {
+            "type": "string",
+            "title": "Landmark"
+          },
+          "stamp": {
+            "type": "string",
+            "title": "Stamp"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "country",
+          "region",
+          "coordinates",
+          "tagline",
+          "description",
+          "landmark",
+          "stamp"
+        ],
+        "title": "City"
+      },
+      "ExploreAction": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "exploreScene",
+            "title": "Type"
+          },
+          "sceneId": {
+            "type": "string",
+            "title": "Sceneid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "sceneId"
+        ],
+        "title": "ExploreAction"
+      },
+      "Feedback": {
+        "properties": {
+          "correct": {
+            "type": "boolean",
+            "title": "Correct"
+          },
+          "questionId": {
+            "type": "string",
+            "title": "Questionid"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "correct",
+          "questionId",
+          "explanation"
+        ],
+        "title": "Feedback"
+      },
+      "GameSnapshot": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "contentVersion": {
+            "type": "string",
+            "title": "Contentversion"
+          },
+          "initialCityId": {
+            "type": "string",
+            "title": "Initialcityid"
+          },
+          "currentCityId": {
+            "type": "string",
+            "title": "Currentcityid"
+          },
+          "currentSceneId": {
+            "type": "string",
+            "title": "Currentsceneid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "phase": {
+            "type": "string",
+            "enum": [
+              "exploration",
+              "challenge",
+              "travel",
+              "finished"
+            ],
+            "title": "Phase"
+          },
+          "itinerary": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Itinerary"
+          },
+          "exploredSceneIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exploredsceneids"
+          },
+          "stamps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Stamps"
+          },
+          "cityErrors": {
+            "type": "integer",
+            "title": "Cityerrors"
+          },
+          "totalErrors": {
+            "type": "integer",
+            "title": "Totalerrors"
+          },
+          "cities": {
+            "items": {
+              "$ref": "#/components/schemas/MapCity"
+            },
+            "type": "array",
+            "title": "Cities"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/Scene"
+            },
+            "type": "array",
+            "title": "Scenes"
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Question"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "questionNumber": {
+            "type": "integer",
+            "title": "Questionnumber"
+          },
+          "journal": {
+            "items": {
+              "$ref": "#/components/schemas/JournalCity"
+            },
+            "type": "array",
+            "title": "Journal"
+          },
+          "feedback": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Feedback"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "epilogue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Epilogue"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "contentVersion",
+          "initialCityId",
+          "currentCityId",
+          "currentSceneId",
+          "status",
+          "phase",
+          "itinerary",
+          "exploredSceneIds",
+          "stamps",
+          "cityErrors",
+          "totalErrors",
+          "cities",
+          "scenes",
+          "question",
+          "questionNumber",
+          "journal",
+          "feedback",
+          "epilogue"
+        ],
+        "title": "GameSnapshot"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "JournalCity": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "region": {
+            "type": "string",
+            "enum": [
+              "europe",
+              "usa"
+            ],
+            "title": "Region"
+          },
+          "coordinates": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Coordinates"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "landmark": {
+            "type": "string",
+            "title": "Landmark"
+          },
+          "stamp": {
+            "type": "string",
+            "title": "Stamp"
+          },
+          "stamped": {
+            "type": "boolean",
+            "title": "Stamped"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/Scene"
+            },
+            "type": "array",
+            "title": "Scenes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "country",
+          "region",
+          "coordinates",
+          "tagline",
+          "description",
+          "landmark",
+          "stamp",
+          "stamped",
+          "scenes"
+        ],
+        "title": "JournalCity"
+      },
+      "MapCity": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "region": {
+            "type": "string",
+            "enum": [
+              "europe",
+              "usa"
+            ],
+            "title": "Region"
+          },
+          "coordinates": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Coordinates"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "landmark": {
+            "type": "string",
+            "title": "Landmark"
+          },
+          "stamp": {
+            "type": "string",
+            "title": "Stamp"
+          },
+          "mapStatus": {
+            "type": "string",
+            "enum": [
+              "current",
+              "visited",
+              "available",
+              "locked",
+              "discarded"
+            ],
+            "title": "Mapstatus"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "country",
+          "region",
+          "coordinates",
+          "tagline",
+          "description",
+          "landmark",
+          "stamp",
+          "mapStatus"
+        ],
+        "title": "MapCity"
+      },
+      "NewGameRequest": {
+        "properties": {
+          "initialCityId": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Initialcityid"
+          },
+          "expectedGameId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedgameid"
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Requestid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "initialCityId",
+          "requestId"
+        ],
+        "title": "NewGameRequest"
+      },
+      "Option": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "title": "Option"
+      },
+      "Question": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/Option"
+            },
+            "type": "array",
+            "title": "Options"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "prompt",
+          "options"
+        ],
+        "title": "Question"
+      },
+      "Scene": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "eyebrow": {
+            "type": "string",
+            "title": "Eyebrow"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array",
+            "title": "Sources"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "eyebrow",
+          "text",
+          "detail",
+          "sources"
+        ],
+        "title": "Scene"
+      },
+      "Source": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "reviewedAt": {
+            "type": "string",
+            "title": "Reviewedat"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "reviewedAt"
+        ],
+        "title": "Source"
+      },
+      "TravelAction": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "chooseRoute",
+            "title": "Type"
+          },
+          "cityId": {
+            "type": "string",
+            "title": "Cityid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "cityId"
+        ],
+        "title": "TravelAction"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

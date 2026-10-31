@@ -29,6 +29,8 @@ class GameRepository:
         catalog = loadCatalog()
         state = createGame(catalog, initialCityId)
         with self.sessionFactory.begin() as session:
+            # SQLite serializa la sustitución de partida antes de consultar al propietario.
+            session.connection().exec_driver_sql("BEGIN IMMEDIATE")
             guest = session.get(GuestRow, ownerHash)
             if not guest:
                 guest = GuestRow(sessionHash=ownerHash)
@@ -72,6 +74,7 @@ class GameRepository:
     ) -> dict:
         requestHash = self.fingerprint({"expectedVersion": expectedVersion, "action": action})
         with self.sessionFactory.begin() as session:
+            session.connection().exec_driver_sql("BEGIN IMMEDIATE")
             guest = session.get(GuestRow, ownerHash)
             if not guest or guest.activeGameId != gameId:
                 raise GameError("La partida solicitada no es la partida vigente.", 409)

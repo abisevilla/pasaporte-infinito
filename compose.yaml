@@ -1,0 +1,13 @@
+services:
+  game:
+    build: .
+    ports:
+      - '127.0.0.1:8000:8000'
+    volumes:
+      - game-data:/var/lib/pasaporte
+    environment:
+      PUBLIC_ORIGIN: http://127.0.0.1:8000
+      COOKIE_SECURE: 'false'
+    restart: unless-stopped
+volumes:
+  game-data:

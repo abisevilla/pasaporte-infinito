@@ -83,6 +83,7 @@ class GameSnapshot(Contract):
     questionNumber: int
     journal: list[JournalCity]
     feedback: Feedback | None
+    epilogue: str | None
 
 
 class CatalogResponse(Contract):
