@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, gameApi } from "@/data/api";
-import type { GameAction } from "@/shared/types";
+import type { Game, GameAction } from "@/shared/types";
 
 export function useGame() {
   const client = useQueryClient();
@@ -30,15 +30,18 @@ export function useGame() {
         void client.invalidateQueries({ queryKey: ["game"] });
     },
   });
-  function decide(decision: GameAction) {
+  function decide(decision: GameAction, onSuccess?: (game: Game) => void) {
     const game = current.data;
     if (!game || action.isPending) return;
-    action.mutate({
-      gameId: game.id,
-      expectedVersion: game.version,
-      requestId: crypto.randomUUID(),
-      action: decision,
-    });
+    action.mutate(
+      {
+        gameId: game.id,
+        expectedVersion: game.version,
+        requestId: crypto.randomUUID(),
+        action: decision,
+      },
+      { onSuccess },
+    );
   }
   return {
     catalog,

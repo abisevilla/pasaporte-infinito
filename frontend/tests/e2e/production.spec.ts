@@ -6,6 +6,7 @@ test("FastAPI entrega la compilación y sus recursos locales", async ({
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("http://127.0.0.1:8000/");
+  await page.getByRole("button", { name: "Elegir mi origen →" }).click();
   await expect(
     page.getByRole("button", { name: "Comenzar mi viaje" }),
   ).toBeDisabled();
@@ -13,7 +14,7 @@ test("FastAPI entrega la compilación y sus recursos locales", async ({
     6,
   );
   await expect(
-    page.getByRole("region", { name: "Mapa de destinos" }),
+    page.getByRole("group", { name: "Lista de destinos" }),
   ).toBeVisible();
   expect(errors).toEqual([]);
 });

@@ -1,8 +1,9 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { startScreen } from "./helpers";
 
 test("accesibilidad de origen y desafío", async ({ page }) => {
-  await page.goto("/");
+  await startScreen(page);
   await expect(
     page.getByRole("button", { name: "Comenzar mi viaje" }),
   ).toBeVisible();

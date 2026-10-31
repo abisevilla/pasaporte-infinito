@@ -9,6 +9,34 @@ El juego incluye 18 escenas y 18 preguntas documentadas, 120 itinerarios, mapa c
 vistas regionales, selección por lista, cuaderno y recuperación del progreso mediante una
 cookie anónima HttpOnly. No necesita cuentas ni servicios de generación de contenido.
 
+## Pantallas y teclado
+
+La interfaz es una SPA organizada en pantallas que ocupan la ventana, sin desplazamiento
+vertical. Inicio, destinos, mapa, escenas, preguntas, resultados, cuaderno, fuentes y ayuda
+se muestran por separado. El texto se divide en páginas según el espacio disponible y se
+recalcula al cambiar el tamaño de la ventana. Las flechas permiten recorrerlo sin ocultar
+el resto del contenido.
+
+Los controles aparecen desde el inicio y permanecen disponibles en el pie de pantalla:
+
+| Tecla | Acción |
+| --- | --- |
+| `↑` / `↓` | Elegir ciudad o respuesta; recorrer controles cuando no hay opciones |
+| `←` / `→` | Cambiar de página de texto, escena o entrada; en destinos, cambiar de ciudad |
+| `Enter` | Confirmar una elección o activar el botón enfocado |
+| `Espacio` | Activar un botón o marcar una respuesta |
+| `Tab` / `Mayús + Tab` | Recorrer todos los controles, incluidos menús y enlaces |
+| `Escape` / `Retroceso` | Volver a la pantalla anterior; Escape cierra los diálogos |
+| `H` / `?` | Abrir o cerrar la ayuda |
+| `J` | Abrir o cerrar el cuaderno durante una partida |
+| `Inicio` / `Fin` | Primera o última opción |
+| `Re Pág` / `Av Pág` | Página de texto anterior o siguiente |
+
+Cambiar de escena con las flechas solo permite leerla. `Registrar escena` guarda su
+exploración en el backend. Las respuestas requieren confirmación; mantener Enter pulsado
+no envía acciones sucesivas. Tras cada respuesta hay una pantalla de explicación antes
+de continuar. El ratón y los controles táctiles siguen disponibles.
+
 ## Ejecutar en local
 
 Requisitos comprobados: Python **3.15.2**, Node **24** y npm. Desde la raíz:

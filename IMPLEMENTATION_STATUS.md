@@ -2,6 +2,15 @@
 
 Actualización: 30 de octubre de 2026. Implementación local autorizada; publicación externa fuera de esta entrega.
 
+## Refactor de pantallas y teclado
+
+- Interfaz SPA a altura de ventana, sin scroll vertical: inicio, destinos, mapa, escenas, desafío, explicación de respuesta, epílogo, cuaderno, fuentes y ayuda separados.
+- Texto paginado con medición del espacio real y adaptación al redimensionar; las fuentes largas también se reparten en páginas.
+- Flechas para selección y lectura, Enter para confirmar, Escape/Retroceso para volver, H para ayuda y J para cuaderno. Tab y controles de ratón/táctiles conservados.
+- Instrucciones visibles en la primera pantalla y guía permanente; ayuda detallada paginada.
+- Navegar escenas no modifica la partida: solamente registrar y confirmar envían decisiones. Las reglas y la persistencia del backend se conservan.
+- Pruebas nuevas para teclado, foco, diálogos, cuaderno, fuentes y ausencia de contenido recortado en ventanas de 320×568, 844×390, 640×360 y 320×480.
+
 ## Implementado
 
 - Python 3.15.2 verificado en el sistema y `.venv/`; dependencias instaladas y fijadas en `backend/requirements.txt`.
@@ -21,7 +30,7 @@ Actualización: 30 de octubre de 2026. Implementación local autorizada; publica
 
 - Backend: 129 pruebas aprobadas, incluidos los 120 itinerarios, derrota, reinicio, aislamiento, persistencia, idempotencia, versiones obsoletas y concurrencia.
 - Frontend: tres pruebas de componentes/API aprobadas; lint, tipos, formato y build comprobados.
-- Playwright: 20 pruebas aprobadas (18 de juego/accesibilidad y dos de entrega de la compilación desde FastAPI), con seis orígenes, recuperación, viaje de tres ciudades, cuaderno, epílogo, derrota y reinicio; escritorio y móvil.
+- Playwright: 24 pruebas aprobadas, incluidas navegación por teclado, ventanas pequeñas sin scroll, juego/accesibilidad y entrega de la compilación desde FastAPI; seis orígenes, recuperación, viaje de tres ciudades, cuaderno, epílogo, derrota y reinicio en escritorio y móvil.
 - Revisión de capturas generadas por las pruebas: atlas inicial y pantalla de partida, incluidas vistas móviles.
 - Las pruebas completas detectaron y permitieron corregir el origen de desarrollo y el contador de escenas por ciudad.
 - Auditoría automatizada de accesibilidad aprobada para selección y desafío en escritorio y móvil (WCAG 2 A/AA y 2.1 AA, reglas aplicables de axe-core).
