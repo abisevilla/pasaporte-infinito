@@ -1,0 +1,967 @@
+{
+  "version": "1.0.0",
+  "cities": [
+    {
+      "id": "madrid",
+      "name": "Madrid",
+      "country": "España",
+      "region": "europe",
+      "coordinates": [
+        -3.6921,
+        40.4138
+      ],
+      "tagline": "Un edificio, dos vocaciones",
+      "description": "Tres miradas a museo del prado: su historia, sus detalles y las huellas del tiempo.",
+      "landmark": "Museo del Prado",
+      "stamp": "MADRID",
+      "scenes": [
+        {
+          "id": "madrid-scene-1",
+          "title": "Antes de los cuadros",
+          "eyebrow": "Archivo de viaje · 01",
+          "text": "El edificio principal del Prado fue diseñado por Juan de Villanueva para el Real Gabinete de Historia Natural. Su destino inicial no era una pinacoteca.",
+          "detail": "Observa cómo cambia la función de un edificio.",
+          "sources": [
+            {
+              "title": "Ministerio de Cultura — Museo Real",
+              "url": "https://www.cultura.gob.es/cultura/archivos/difusion/mc-difusion/bellas-artes-archivos-estatales/museo-del-prado/historia-museo-prado/edificios/museo-real.html",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "madrid-scene-2",
+          "title": "Una apertura en 1819",
+          "eyebrow": "Archivo de viaje · 02",
+          "text": "El museo abrió el 19 de noviembre de 1819. Las circunstancias de la Guerra de la Independencia habían alterado los planes originales para el edificio.",
+          "detail": "Guarda el año de apertura en tu cuaderno.",
+          "sources": [
+            {
+              "title": "Ministerio de Cultura — Museo Real",
+              "url": "https://www.cultura.gob.es/cultura/archivos/difusion/mc-difusion/bellas-artes-archivos-estatales/museo-del-prado/historia-museo-prado/edificios/museo-real.html",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "madrid-scene-3",
+          "title": "La primera sede",
+          "eyebrow": "Archivo de viaje · 03",
+          "text": "El edificio Villanueva fue la sede original del museo y de su colección inicial. El nombre del arquitecto sigue identificando esta parte del Prado.",
+          "detail": "Arquitectura y colección comparten una historia.",
+          "sources": [
+            {
+              "title": "Ministerio de Cultura — Museo Real",
+              "url": "https://www.cultura.gob.es/cultura/archivos/difusion/mc-difusion/bellas-artes-archivos-estatales/museo-del-prado/historia-museo-prado/edificios/museo-real.html",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "madrid-question-1",
+          "prompt": "¿Quién diseñó el edificio original del Prado?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Antoni Gaudí"
+            },
+            {
+              "id": "option-2",
+              "text": "Juan de Villanueva"
+            },
+            {
+              "id": "option-3",
+              "text": "Hector Lefuel"
+            },
+            {
+              "id": "option-4",
+              "text": "Robert Mills"
+            }
+          ],
+          "correctOptionId": "option-2",
+          "explanation": "Juan de Villanueva diseñó el edificio.",
+          "sources": [
+            {
+              "title": "Ministerio de Cultura — Museo Real",
+              "url": "https://www.cultura.gob.es/cultura/archivos/difusion/mc-difusion/bellas-artes-archivos-estatales/museo-del-prado/historia-museo-prado/edificios/museo-real.html",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "madrid-question-2",
+          "prompt": "¿En qué año abrió el museo?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "1789"
+            },
+            {
+              "id": "option-2",
+              "text": "1882"
+            },
+            {
+              "id": "option-3",
+              "text": "1819"
+            },
+            {
+              "id": "option-4",
+              "text": "1926"
+            }
+          ],
+          "correctOptionId": "option-3",
+          "explanation": "El Prado abrió el 19 de noviembre de 1819.",
+          "sources": [
+            {
+              "title": "Ministerio de Cultura — Museo Real",
+              "url": "https://www.cultura.gob.es/cultura/archivos/difusion/mc-difusion/bellas-artes-archivos-estatales/museo-del-prado/historia-museo-prado/edificios/museo-real.html",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "madrid-question-3",
+          "prompt": "¿Qué uso se había previsto inicialmente?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Un teatro"
+            },
+            {
+              "id": "option-2",
+              "text": "Una estación"
+            },
+            {
+              "id": "option-3",
+              "text": "Un palacio municipal"
+            },
+            {
+              "id": "option-4",
+              "text": "Un gabinete de historia natural"
+            }
+          ],
+          "correctOptionId": "option-4",
+          "explanation": "El proyecto estaba destinado al Real Gabinete de Historia Natural.",
+          "sources": [
+            {
+              "title": "Ministerio de Cultura — Museo Real",
+              "url": "https://www.cultura.gob.es/cultura/archivos/difusion/mc-difusion/bellas-artes-archivos-estatales/museo-del-prado/historia-museo-prado/edificios/museo-real.html",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "country": "España",
+      "region": "europe",
+      "coordinates": [
+        2.1744,
+        41.4036
+      ],
+      "tagline": "Una obra entre generaciones",
+      "description": "Tres miradas a sagrada familia: su historia, sus detalles y las huellas del tiempo.",
+      "landmark": "Sagrada Familia",
+      "stamp": "BARCELONA",
+      "scenes": [
+        {
+          "id": "barcelona-scene-1",
+          "title": "La primera piedra",
+          "eyebrow": "Archivo de viaje · 01",
+          "text": "La primera piedra de la Sagrada Familia se colocó el 19 de marzo de 1882. El proyecto de aquel momento era de Francisco de Paula del Villar.",
+          "detail": "El comienzo precede a la llegada de Gaudí.",
+          "sources": [
+            {
+              "title": "Sagrada Familia — Historia del templo",
+              "url": "https://sagradafamilia.org/es/historia-del-templo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "barcelona-scene-2",
+          "title": "Un cambio de dirección",
+          "eyebrow": "Archivo de viaje · 02",
+          "text": "Antoni Gaudí asumió el proyecto en 1883. Al principio lo compaginó con otras obras; desde 1914 se dedicó exclusivamente al templo.",
+          "detail": "Distingue el inicio de las obras del relevo arquitectónico.",
+          "sources": [
+            {
+              "title": "Sagrada Familia — Historia del templo",
+              "url": "https://sagradafamilia.org/es/historia-del-templo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "barcelona-scene-3",
+          "title": "El campanario de Bernabé",
+          "eyebrow": "Archivo de viaje · 03",
+          "text": "El campanario de san Bernabé, en la fachada del Nacimiento, se terminó en 1925. Fue el único campanario que Gaudí dejó concluido antes de su muerte.",
+          "detail": "Una torre permite leer la cronología del conjunto.",
+          "sources": [
+            {
+              "title": "Sagrada Familia — Historia del templo",
+              "url": "https://sagradafamilia.org/es/historia-del-templo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "barcelona-question-1",
+          "prompt": "¿Cuándo se colocó la primera piedra?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "1882"
+            },
+            {
+              "id": "option-2",
+              "text": "1819"
+            },
+            {
+              "id": "option-3",
+              "text": "1925"
+            },
+            {
+              "id": "option-4",
+              "text": "1914"
+            }
+          ],
+          "correctOptionId": "option-1",
+          "explanation": "La primera piedra se colocó en 1882.",
+          "sources": [
+            {
+              "title": "Sagrada Familia — Historia del templo",
+              "url": "https://sagradafamilia.org/es/historia-del-templo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "barcelona-question-2",
+          "prompt": "¿Quién asumió el proyecto en 1883?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Juan de Villanueva"
+            },
+            {
+              "id": "option-2",
+              "text": "Robert Mills"
+            },
+            {
+              "id": "option-3",
+              "text": "Antoni Gaudí"
+            },
+            {
+              "id": "option-4",
+              "text": "Leonardo da Vinci"
+            }
+          ],
+          "correctOptionId": "option-3",
+          "explanation": "Gaudí asumió el proyecto en 1883.",
+          "sources": [
+            {
+              "title": "Sagrada Familia — Historia del templo",
+              "url": "https://sagradafamilia.org/es/historia-del-templo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "barcelona-question-3",
+          "prompt": "¿Qué campanario dejó terminado Gaudí?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "San Marcos"
+            },
+            {
+              "id": "option-2",
+              "text": "San Bernabé"
+            },
+            {
+              "id": "option-3",
+              "text": "San Lucas"
+            },
+            {
+              "id": "option-4",
+              "text": "San Juan"
+            }
+          ],
+          "correctOptionId": "option-2",
+          "explanation": "El de san Bernabé se terminó en 1925.",
+          "sources": [
+            {
+              "title": "Sagrada Familia — Historia del templo",
+              "url": "https://sagradafamilia.org/es/historia-del-templo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paris",
+      "name": "París",
+      "country": "Francia",
+      "region": "europe",
+      "coordinates": [
+        2.3376,
+        48.8606
+      ],
+      "tagline": "Mirar más allá de una sonrisa",
+      "description": "Tres miradas a museo del louvre: su historia, sus detalles y las huellas del tiempo.",
+      "landmark": "Museo del Louvre",
+      "stamp": "PARIS",
+      "scenes": [
+        {
+          "id": "paris-scene-1",
+          "title": "Un retrato sobre madera",
+          "eyebrow": "Archivo de viaje · 01",
+          "text": "La Mona Lisa, de Leonardo da Vinci, está pintada sobre una tabla de álamo. Su conservación requiere controlar la temperatura y la humedad.",
+          "detail": "El soporte también forma parte de una obra.",
+          "sources": [
+            {
+              "title": "Musée du Louvre — La Salle des États",
+              "url": "https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "paris-scene-2",
+          "title": "Una sala con otra vida",
+          "eyebrow": "Archivo de viaje · 02",
+          "text": "La Salle des États fue construida entre 1855 y 1857 por Hector Lefuel. Durante el Segundo Imperio acogió sesiones legislativas presididas por Napoleón III.",
+          "detail": "Un espacio político se convirtió en espacio museístico.",
+          "sources": [
+            {
+              "title": "Musée du Louvre — La Salle des États",
+              "url": "https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "paris-scene-3",
+          "title": "Frente al retrato",
+          "eyebrow": "Archivo de viaje · 03",
+          "text": "Las bodas de Caná, de Veronés, se expone frente a la Mona Lisa. El gran lienzo representa un banquete; invita a comparar formatos y escalas.",
+          "detail": "Mira también las obras que rodean al cuadro más conocido.",
+          "sources": [
+            {
+              "title": "Musée du Louvre — La Salle des États",
+              "url": "https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "paris-question-1",
+          "prompt": "¿Quién pintó la Mona Lisa?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Veronés"
+            },
+            {
+              "id": "option-2",
+              "text": "Goya"
+            },
+            {
+              "id": "option-3",
+              "text": "Leonardo da Vinci"
+            },
+            {
+              "id": "option-4",
+              "text": "Velázquez"
+            }
+          ],
+          "correctOptionId": "option-3",
+          "explanation": "La Mona Lisa es obra de Leonardo da Vinci.",
+          "sources": [
+            {
+              "title": "Musée du Louvre — La Salle des États",
+              "url": "https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "paris-question-2",
+          "prompt": "¿Sobre qué soporte está pintada?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Tabla de álamo"
+            },
+            {
+              "id": "option-2",
+              "text": "Cobre"
+            },
+            {
+              "id": "option-3",
+              "text": "Lienzo de lino"
+            },
+            {
+              "id": "option-4",
+              "text": "Mármol"
+            }
+          ],
+          "correctOptionId": "option-1",
+          "explanation": "El soporte es una tabla de álamo.",
+          "sources": [
+            {
+              "title": "Musée du Louvre — La Salle des États",
+              "url": "https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "paris-question-3",
+          "prompt": "¿Qué obra de Veronés se encuentra enfrente?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "La ronda de noche"
+            },
+            {
+              "id": "option-2",
+              "text": "Las meninas"
+            },
+            {
+              "id": "option-3",
+              "text": "El nacimiento de Venus"
+            },
+            {
+              "id": "option-4",
+              "text": "Las bodas de Caná"
+            }
+          ],
+          "correctOptionId": "option-4",
+          "explanation": "Enfrente se expone Las bodas de Caná.",
+          "sources": [
+            {
+              "title": "Musée du Louvre — La Salle des États",
+              "url": "https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rome",
+      "name": "Roma",
+      "country": "Italia",
+      "region": "europe",
+      "coordinates": [
+        12.4922,
+        41.8902
+      ],
+      "tagline": "Las muchas vidas de un anfiteatro",
+      "description": "Tres miradas a coliseo: su historia, sus detalles y las huellas del tiempo.",
+      "landmark": "Coliseo",
+      "stamp": "ROME",
+      "scenes": [
+        {
+          "id": "rome-scene-1",
+          "title": "El proyecto de Vespasiano",
+          "eyebrow": "Archivo de viaje · 01",
+          "text": "El emperador Vespasiano impulsó el Coliseo. El emplazamiento había estado ocupado por el lago artificial de la Domus Aurea de Nerón.",
+          "detail": "El lugar cambió de uso antes de convertirse en anfiteatro.",
+          "sources": [
+            {
+              "title": "Roma Capitale — El Anfiteatro Flavio",
+              "url": "https://www.turismoroma.it/it/luoghi/lanfiteatro-flavio-colosseo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "rome-scene-2",
+          "title": "La inauguración de Tito",
+          "eyebrow": "Archivo de viaje · 02",
+          "text": "El anfiteatro fue inaugurado bajo Tito en el año 80 d. C. Su nombre, Anfiteatro Flavio, recuerda a la dinastía que lo promovió.",
+          "detail": "Conserva ambos nombres del monumento.",
+          "sources": [
+            {
+              "title": "Roma Capitale — El Anfiteatro Flavio",
+              "url": "https://www.turismoroma.it/it/luoghi/lanfiteatro-flavio-colosseo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "rome-scene-3",
+          "title": "Después de los espectáculos",
+          "eyebrow": "Archivo de viaje · 03",
+          "text": "Al terminar su función como edificio de espectáculos en el siglo VI, el Coliseo entró en otra etapa. Su entorno recibió enterramientos y se recuperaron materiales del edificio.",
+          "detail": "La historia del Coliseo continúa después de la Antigüedad.",
+          "sources": [
+            {
+              "title": "Parco archeologico del Colosseo — La vida medieval",
+              "url": "https://colosseo.it/opere/la-vita-nel-colosseo-durante-il-medioevo-1-le-domus-e-le-cryptae/",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "rome-question-1",
+          "prompt": "¿Qué emperador impulsó su construcción?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Augusto"
+            },
+            {
+              "id": "option-2",
+              "text": "Nerón"
+            },
+            {
+              "id": "option-3",
+              "text": "Trajano"
+            },
+            {
+              "id": "option-4",
+              "text": "Vespasiano"
+            }
+          ],
+          "correctOptionId": "option-4",
+          "explanation": "Vespasiano promovió el anfiteatro.",
+          "sources": [
+            {
+              "title": "Roma Capitale — El Anfiteatro Flavio",
+              "url": "https://www.turismoroma.it/it/luoghi/lanfiteatro-flavio-colosseo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "rome-question-2",
+          "prompt": "¿En qué año fue inaugurado bajo Tito?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "476 d. C."
+            },
+            {
+              "id": "option-2",
+              "text": "80 d. C."
+            },
+            {
+              "id": "option-3",
+              "text": "1492"
+            },
+            {
+              "id": "option-4",
+              "text": "27 a. C."
+            }
+          ],
+          "correctOptionId": "option-2",
+          "explanation": "La inauguración corresponde al año 80 d. C.",
+          "sources": [
+            {
+              "title": "Roma Capitale — El Anfiteatro Flavio",
+              "url": "https://www.turismoroma.it/it/luoghi/lanfiteatro-flavio-colosseo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "rome-question-3",
+          "prompt": "¿Cuál es su otro nombre?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Circo Máximo"
+            },
+            {
+              "id": "option-2",
+              "text": "Teatro de Marcelo"
+            },
+            {
+              "id": "option-3",
+              "text": "Anfiteatro Flavio"
+            },
+            {
+              "id": "option-4",
+              "text": "Panteón"
+            }
+          ],
+          "correctOptionId": "option-3",
+          "explanation": "También se conoce como Anfiteatro Flavio.",
+          "sources": [
+            {
+              "title": "Roma Capitale — El Anfiteatro Flavio",
+              "url": "https://www.turismoroma.it/it/luoghi/lanfiteatro-flavio-colosseo",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "new-york",
+      "name": "Nueva York",
+      "country": "Estados Unidos",
+      "region": "usa",
+      "coordinates": [
+        -74.0445,
+        40.6892
+      ],
+      "tagline": "Los detalles de la libertad",
+      "description": "Tres miradas a estatua de la libertad: su historia, sus detalles y las huellas del tiempo.",
+      "landmark": "Estatua de la Libertad",
+      "stamp": "NEW YORK",
+      "scenes": [
+        {
+          "id": "new-york-scene-1",
+          "title": "Una fecha en la tablilla",
+          "eyebrow": "Archivo de viaje · 01",
+          "text": "La tablilla de la Estatua de la Libertad lleva, en números romanos, la fecha del 4 de julio de 1776: la independencia estadounidense.",
+          "detail": "Una inscripción conecta escultura e historia.",
+          "sources": [
+            {
+              "title": "National Park Service — Statue Statistics",
+              "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "new-york-scene-2",
+          "title": "La corona y los pies",
+          "eyebrow": "Archivo de viaje · 02",
+          "text": "La corona tiene siete rayos y veinticinco ventanas. A los pies hay cadenas y un grillete roto que no se distinguen desde abajo.",
+          "detail": "No todos los detalles se ven desde el suelo.",
+          "sources": [
+            {
+              "title": "National Park Service — Statue Statistics",
+              "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "new-york-scene-3",
+          "title": "Dos antorchas",
+          "eyebrow": "Archivo de viaje · 03",
+          "text": "La antorcha actual sustituyó a la original en 1986. Es de cobre recubierto con pan de oro de 24 quilates.",
+          "detail": "Una restauración también deja su propia fecha.",
+          "sources": [
+            {
+              "title": "National Park Service — Statue Statistics",
+              "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "new-york-question-1",
+          "prompt": "¿Qué fecha aparece en la tablilla?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "4 de julio de 1776"
+            },
+            {
+              "id": "option-2",
+              "text": "14 de julio de 1789"
+            },
+            {
+              "id": "option-3",
+              "text": "12 de octubre de 1492"
+            },
+            {
+              "id": "option-4",
+              "text": "6 de diciembre de 1884"
+            }
+          ],
+          "correctOptionId": "option-1",
+          "explanation": "La tablilla recuerda el 4 de julio de 1776.",
+          "sources": [
+            {
+              "title": "National Park Service — Statue Statistics",
+              "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "new-york-question-2",
+          "prompt": "¿Cuántos rayos tiene la corona?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Cinco"
+            },
+            {
+              "id": "option-2",
+              "text": "Doce"
+            },
+            {
+              "id": "option-3",
+              "text": "Nueve"
+            },
+            {
+              "id": "option-4",
+              "text": "Siete"
+            }
+          ],
+          "correctOptionId": "option-4",
+          "explanation": "La corona tiene siete rayos.",
+          "sources": [
+            {
+              "title": "National Park Service — Statue Statistics",
+              "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "new-york-question-3",
+          "prompt": "¿Cuándo se instaló la antorcha actual?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "1819"
+            },
+            {
+              "id": "option-2",
+              "text": "1925"
+            },
+            {
+              "id": "option-3",
+              "text": "1986"
+            },
+            {
+              "id": "option-4",
+              "text": "2005"
+            }
+          ],
+          "correctOptionId": "option-3",
+          "explanation": "La antorcha fue reemplazada en 1986.",
+          "sources": [
+            {
+              "title": "National Park Service — Statue Statistics",
+              "url": "https://www.nps.gov/stli/learn/historyculture/statue-statistics.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "washington",
+      "name": "Washington D. C.",
+      "country": "Estados Unidos",
+      "region": "usa",
+      "coordinates": [
+        -77.0353,
+        38.8895
+      ],
+      "tagline": "La memoria escrita en piedra",
+      "description": "Tres miradas a monumento a washington: su historia, sus detalles y las huellas del tiempo.",
+      "landmark": "Monumento a Washington",
+      "stamp": "WASHINGTON",
+      "scenes": [
+        {
+          "id": "washington-scene-1",
+          "title": "Un homenaje vertical",
+          "eyebrow": "Archivo de viaje · 01",
+          "text": "El Monumento a Washington honra a George Washington. La forma final del monumento es un obelisco: una silueta sencilla que se eleva sobre la capital.",
+          "detail": "Relaciona forma y persona conmemorada.",
+          "sources": [
+            {
+              "title": "National Park Service — Washington Monument",
+              "url": "https://www.nps.gov/places/000/washington-monument.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "washington-scene-2",
+          "title": "Una construcción interrumpida",
+          "eyebrow": "Archivo de viaje · 02",
+          "text": "La construcción empezó en 1848 y terminó en 1884. Los problemas de financiación, la Guerra Civil y cambios en la dirección alargaron el proceso.",
+          "detail": "Comenzar y terminar son dos hitos distintos.",
+          "sources": [
+            {
+              "title": "National Park Service — Washington Monument",
+              "url": "https://www.nps.gov/places/000/washington-monument.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "washington-scene-3",
+          "title": "Dos tonos de mármol",
+          "eyebrow": "Archivo de viaje · 03",
+          "text": "El cambio de color exterior recuerda las etapas de construcción. Al reanudarse la obra se utilizó mármol de otra cantera; la exposición al tiempo acentuó las diferencias.",
+          "detail": "La superficie conserva una pausa de la obra.",
+          "sources": [
+            {
+              "title": "National Park Service — Preguntas sobre el monumento",
+              "url": "https://home.nps.gov/wamo/faqs.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "washington-question-1",
+          "prompt": "¿A quién está dedicado el monumento?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Abraham Lincoln"
+            },
+            {
+              "id": "option-2",
+              "text": "Thomas Jefferson"
+            },
+            {
+              "id": "option-3",
+              "text": "George Washington"
+            },
+            {
+              "id": "option-4",
+              "text": "Benjamin Franklin"
+            }
+          ],
+          "correctOptionId": "option-3",
+          "explanation": "El monumento honra a George Washington.",
+          "sources": [
+            {
+              "title": "National Park Service — Washington Monument",
+              "url": "https://www.nps.gov/places/000/washington-monument.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "washington-question-2",
+          "prompt": "¿Qué forma tiene?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Una cúpula"
+            },
+            {
+              "id": "option-2",
+              "text": "Un obelisco"
+            },
+            {
+              "id": "option-3",
+              "text": "Un arco de triunfo"
+            },
+            {
+              "id": "option-4",
+              "text": "Una pirámide escalonada"
+            }
+          ],
+          "correctOptionId": "option-2",
+          "explanation": "Su forma final es la de un obelisco.",
+          "sources": [
+            {
+              "title": "National Park Service — Washington Monument",
+              "url": "https://www.nps.gov/places/000/washington-monument.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        },
+        {
+          "id": "washington-question-3",
+          "prompt": "¿En qué año terminó su construcción?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "1848"
+            },
+            {
+              "id": "option-2",
+              "text": "1776"
+            },
+            {
+              "id": "option-3",
+              "text": "1819"
+            },
+            {
+              "id": "option-4",
+              "text": "1884"
+            }
+          ],
+          "correctOptionId": "option-4",
+          "explanation": "La construcción terminó en 1884.",
+          "sources": [
+            {
+              "title": "National Park Service — Washington Monument",
+              "url": "https://www.nps.gov/places/000/washington-monument.htm",
+              "reviewedAt": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "routes": {
+    "madrid": [
+      "barcelona",
+      "paris",
+      "rome",
+      "new-york",
+      "washington"
+    ],
+    "barcelona": [
+      "madrid",
+      "paris",
+      "rome",
+      "new-york",
+      "washington"
+    ],
+    "paris": [
+      "madrid",
+      "barcelona",
+      "rome",
+      "new-york",
+      "washington"
+    ],
+    "rome": [
+      "madrid",
+      "barcelona",
+      "paris",
+      "new-york",
+      "washington"
+    ],
+    "new-york": [
+      "madrid",
+      "barcelona",
+      "paris",
+      "rome",
+      "washington"
+    ],
+    "washington": [
+      "madrid",
+      "barcelona",
+      "paris",
+      "rome",
+      "new-york"
+    ]
+  }
+}

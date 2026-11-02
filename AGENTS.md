@@ -15,14 +15,14 @@ Actúa como ingeniero de software de **Pasaporte Infinito**, un videojuego con u
 
 Verifica los comandos y sus directorios de ejecución contra `package.json` y `README.md`; adapta los ejemplos a la configuración existente.
 
-Actualmente el repositorio no contiene `package.json`, `requirements.txt` ni `README.md`. Los comandos siguientes son una referencia pendiente de verificación cuando se incorporen esos archivos; no asumas que ya están disponibles.
+El repositorio contiene `frontend/package.json`, `backend/requirements.txt` y `README.md`. Usa Python del entorno `.venv/` creado en la raíz. Consulta `README.md` para migraciones, configuración y pruebas de navegador.
 
 | Acción | Frontend (desde `frontend/`) | Backend (desde `backend/`) |
 |---|---|---|
-| Instalación | `npm install` | `python -m pip install -r requirements.txt` |
-| Desarrollo | `npm run dev` | `python -m uvicorn app.main:app --reload` |
+| Instalación | `npm ci` | `../.venv/bin/python -m pip install -r requirements.txt` |
+| Desarrollo | `npm run dev` | `../.venv/bin/python -m uvicorn app.main:app --reload` |
 | Build | `npm run build` | Según `README.md`, si aplica |
-| Pruebas | `npm test` | `python -m pytest` |
+| Pruebas | `npm test` | `../.venv/bin/python -m pytest` |
 | Agregar componentes | `npx shadcn@latest add <componente>` | — |
 
 Los pasos para ejecutar la aplicación en local, incluidas las configuraciones necesarias, deben documentarse en `README.md`. Consúltalo cuando esté disponible en lugar de duplicarlos aquí.
