@@ -8,9 +8,10 @@ export function JourneyEndArt() {
         <path
           className="journey-end-line"
           d="M30 230C85 270 100 95 170 120S295 265 385 70"
-          pathLength="1"
         />
-        <circle className="journey-end-marker" cx="385" cy="70" r="9" />
+        <g className="journey-end-marker">
+          <circle cx="385" cy="70" r="9" />
+        </g>
         <circle cx="30" cy="230" r="4" fill="currentColor" />
       </svg>
       <div className="journey-end-book">

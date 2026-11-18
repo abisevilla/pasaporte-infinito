@@ -57,7 +57,9 @@ test("tres ciudades, epílogo y cuaderno", async ({ page }, info) => {
         page.getByRole("heading", { name: "¡Respuesta correcta!" }),
       ).toBeVisible();
       await fitsViewport(page);
-      await page.getByRole("button", { name: "Continuar →" }).click();
+      await page
+        .getByRole("button", { name: /^(Ver sello|Seguir el viaje) →$/ })
+        .click();
     }
     await expect(
       page.getByRole("heading", { name: "¡Ruta completada!" }),
@@ -109,7 +111,7 @@ test("tres ciudades, epílogo y cuaderno", async ({ page }, info) => {
   ).toBeVisible();
   await fitsViewport(page);
   await page
-    .getByRole("button", { name: "Abrir cuaderno de viaje", exact: true })
+    .getByRole("link", { name: "Abrir cuaderno de viaje", exact: true })
     .first()
     .click();
   await expect(
@@ -129,7 +131,9 @@ test("tercer error, reinicio y selección sin origen preseleccionado", async ({
   for (let index = 0; index < 3; index++) {
     await page.getByRole("radio", { name: /Antoni Gaudí$/ }).check();
     await page.getByRole("button", { name: "Comprobar respuesta" }).click();
-    await page.getByRole("button", { name: "Continuar →" }).click();
+    await page
+      .getByRole("button", { name: /^(Ver sello|Seguir el viaje) →$/ })
+      .click();
   }
   await expect(
     page.getByRole("heading", { name: "Este viaje termina aquí." }),
@@ -194,6 +198,7 @@ test("tercer error, reinicio y selección sin origen preseleccionado", async ({
   ).toBeVisible();
   await expect(cover).toBeVisible();
   await page.getByRole("button", { name: "Comenzar otra aventura" }).click();
+  await page.getByRole("button", { name: "Elegir nuevo origen" }).click();
   await expect(
     page.getByRole("button", { name: "Comenzar mi viaje" }),
   ).toBeDisabled();

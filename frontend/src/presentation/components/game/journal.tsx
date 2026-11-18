@@ -1,6 +1,12 @@
+import { Link, type LinkProps } from "react-router-dom";
 import type { Game, Scene } from "@/shared/types";
 import { Button } from "../ui/button";
 import { PagedReader } from "./paged-reader";
+
+const reviewDateFormat = new Intl.DateTimeFormat("es", {
+  dateStyle: "long",
+  timeZone: "UTC",
+});
 
 export function Sources({
   scene,
@@ -20,7 +26,7 @@ export function Sources({
       <PagedReader
         key={scene.id}
         label="Fuentes"
-        text={`${scene.title}\n\n${scene.sources.map((source) => `${source.title}\nRevisada: ${source.reviewedAt}\n${source.url}`).join("\n\n")}`}
+        text={`${scene.title}\n\n${scene.sources.map((source) => `${source.title}\nRevisada: ${reviewDateFormat.format(new Date(source.reviewedAt))}\n${source.url}`).join("\n\n")}`}
       />
       <div className="screen-actions">
         <Button data-primary onClick={onBack}>
@@ -43,13 +49,13 @@ export function Journal({
   index,
   onIndexChange,
   onBack,
-  onSources,
+  sourcesLink,
 }: {
   game: Game;
   index: number;
   onIndexChange: (index: number) => void;
   onBack: () => void;
-  onSources: (scene: Scene) => void;
+  sourcesLink: (sceneId: string) => LinkProps;
 }) {
   const entries = game.journal.flatMap((city) =>
     city.scenes.map((scene) => ({ city, scene })),
@@ -73,7 +79,9 @@ export function Journal({
       </div>
       {entry ? (
         <>
-          <h2 className="reading-title">{entry.scene.title}</h2>
+          <h2 className="reading-title" aria-live="polite">
+            {entry.scene.title}
+          </h2>
           <PagedReader
             key={entry.scene.id}
             text={`${entry.scene.text}\n\n${entry.scene.detail}`}
@@ -96,8 +104,8 @@ export function Journal({
           Cerrar cuaderno
         </Button>
         {entry && (
-          <Button variant="outline" onClick={() => onSources(entry.scene)}>
-            Fuentes
+          <Button asChild variant="outline">
+            <Link {...sourcesLink(entry.scene.id)}>Fuentes</Link>
           </Button>
         )}
         <Button

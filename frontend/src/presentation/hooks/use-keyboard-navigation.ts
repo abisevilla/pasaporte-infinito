@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, type RefObject } from "react";
+import { useLayoutEffect, type RefObject } from "react";
 
 type Options = {
   root: RefObject<HTMLElement | null>;
@@ -23,12 +23,10 @@ export function useKeyboardNavigation({
   onJournal,
 }: Options) {
   useLayoutEffect(() => {
-    root.current
-      ?.querySelector<HTMLElement>("[data-screen-title]")
-      ?.focus({ preventScroll: true });
+    root.current?.querySelector<HTMLElement>("[data-screen-title]")?.focus();
   }, [root, screenKey]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function handleKey(event: KeyboardEvent) {
       if (
         event.defaultPrevented ||
@@ -48,7 +46,8 @@ export function useKeyboardNavigation({
       const dialog = document.querySelector<HTMLElement>(
         '[role="alertdialog"], [role="dialog"]',
       );
-      const scope = dialog ?? root.current;
+      if (dialog) return;
+      const scope = root.current;
       if (!scope) return;
       const controls = Array.from(
         scope.querySelectorAll<HTMLElement>(
@@ -80,10 +79,16 @@ export function useKeyboardNavigation({
                   ? 0
                   : items.length - 1
                 : (index + direction + items.length) % items.length;
-        items[next].focus({ preventScroll: true });
+        items[next].focus();
         if (choices.length) items[next].click();
       };
       if (event.key.startsWith("Arrow")) {
+        if (
+          (event.key === "ArrowUp" || event.key === "ArrowDown") &&
+          !choices.length &&
+          document.documentElement.scrollHeight > window.innerHeight
+        )
+          return;
         event.preventDefault();
         if (event.key === "ArrowUp" || event.key === "ArrowDown")
           move(event.key === "ArrowDown" ? 1 : -1);
@@ -112,7 +117,6 @@ export function useKeyboardNavigation({
           activate("[data-primary]");
         }
       } else if (
-        !dialog &&
         ["Escape", "Backspace", "h", "H", "?", "j", "J"].includes(event.key)
       ) {
         event.preventDefault();
@@ -121,18 +125,15 @@ export function useKeyboardNavigation({
         else if (event.key.toLowerCase() === "j") onJournal();
         else onHelp();
       } else if (event.key === "PageDown" || event.key === "PageUp") {
-        event.preventDefault();
-        activate(
-          event.key === "PageDown" ? "[data-page-next]" : "[data-page-prev]",
-        );
+        if (
+          activate(
+            event.key === "PageDown" ? "[data-page-next]" : "[data-page-prev]",
+          )
+        )
+          event.preventDefault();
       } else if (event.key === "Home" || event.key === "End") {
         event.preventDefault();
         move(1, event.key === "Home" ? "first" : "last");
-      } else if (
-        event.key === " " &&
-        !target.closest("button, input, a[href]")
-      ) {
-        event.preventDefault();
       }
     }
     document.addEventListener("keydown", handleKey);

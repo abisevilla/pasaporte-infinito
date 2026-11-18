@@ -18,8 +18,11 @@ export function PagedReader({
     const area = viewport.current;
     const measure = probe.current;
     if (!area || !measure) return;
+    let active = true;
     function paginate() {
-      if (!area || !measure || area.clientHeight < 1) return;
+      if (!active || !area || !measure) return;
+      const pageHeight = area.clientHeight;
+      if (pageHeight < 1) return;
       const characters = Array.from(text);
       const nextPages: string[] = [];
       let start = 0;
@@ -30,7 +33,7 @@ export function PagedReader({
         while (low <= high) {
           const middle = Math.floor((low + high) / 2);
           measure.textContent = characters.slice(start, middle).join("");
-          if (measure.scrollHeight <= area.clientHeight - 2) {
+          if (measure.scrollHeight <= pageHeight - 2) {
             end = middle;
             low = middle + 1;
           } else high = middle - 1;
@@ -49,7 +52,10 @@ export function PagedReader({
     const observer = new ResizeObserver(paginate);
     observer.observe(area);
     void document.fonts?.ready.then(paginate);
-    return () => observer.disconnect();
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
   }, [text]);
   return (
     <section className="paged-reader" aria-label={label}>

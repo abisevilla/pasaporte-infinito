@@ -3,9 +3,9 @@ import { expect, type Page } from "@playwright/test";
 export async function startScreen(page: Page) {
   await page.goto("/");
   await expect(
-    page.getByRole("button", { name: "Elegir mi origen →" }),
+    page.getByRole("link", { name: "Elegir mi origen →" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Elegir mi origen →" }).click();
+  await page.getByRole("link", { name: "Elegir mi origen →" }).click();
 }
 export async function begin(page: Page, city: string) {
   await startScreen(page);

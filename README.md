@@ -15,7 +15,12 @@ La interfaz es una SPA organizada en pantallas que ocupan la ventana, sin despla
 vertical. Inicio, destinos, mapa, escenas, preguntas, resultados, cuaderno, fuentes y ayuda
 se muestran por separado. El texto se divide en páginas según el espacio disponible y se
 recalcula al cambiar el tamaño de la ventana. Las flechas permiten recorrerlo sin ocultar
-el resto del contenido.
+el resto del contenido. En ventanas muy reducidas, la página admite desplazamiento para
+mantener todos los controles al alcance.
+
+El atlas permite desplazar y ampliar el mapa con botones, y elegir la ciudad con una
+lista nativa. La pantalla y la región del atlas se reflejan en la URL. El enlace
+«Saltar al contenido» aparece al recibir el foco con el teclado.
 
 Los controles aparecen desde el inicio y permanecen disponibles en el pie de pantalla:
 
@@ -42,7 +47,7 @@ Al superar las tres preguntas de un destino, la explicación de la respuesta da 
 Enter permite elegir el siguiente destino o ver el epílogo tras el tercer sello. La
 preferencia del sistema de reducir movimiento muestra el sello sin animación.
 
-La pantalla «Este viaje termina aquí» reproduce un cierre del pasaporte, un trazado de
+La pantalla «Este viaje termina aquí» reproduce un cierre del pasaporte, una aparición de la
 ruta y una entrada suave del mensaje cada vez que se abre, también al volver del cuaderno
 o recuperar una partida terminada. Los botones permanecen disponibles durante el efecto;
 con movimiento reducido se muestra la ilustración estática.

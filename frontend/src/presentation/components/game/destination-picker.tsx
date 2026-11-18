@@ -1,4 +1,6 @@
+import { Link, type LinkProps } from "react-router-dom";
 import type { City, Game } from "@/shared/types";
+import { ConfirmDialog } from "../ui/confirm-dialog";
 import { Button } from "../ui/button";
 import { LandmarkArt } from "./landmark-art";
 
@@ -17,23 +19,41 @@ export function DestinationPicker({
   onSelect,
   pending,
   onChoose,
-  onMap,
+  mapLink,
   onBack,
   travel = false,
+  requireConfirmation = false,
 }: {
   cities: Destination[];
   selectedId: string | null;
   onSelect: (id: string) => void;
   pending: boolean;
   onChoose: (id: string) => void;
-  onMap: () => void;
+  mapLink: LinkProps;
   onBack: () => void;
   travel?: boolean;
+  requireConfirmation?: boolean;
 }) {
   const selected = cities.find(
     (city) =>
       city.id === selectedId &&
       (!city.mapStatus || city.mapStatus === "available"),
+  );
+  const choose = () => {
+    if (selected && !pending) onChoose(selected.id);
+  };
+  const chooseButton = (
+    <Button
+      data-primary
+      disabled={!selected || pending}
+      onClick={requireConfirmation ? undefined : choose}
+    >
+      {pending
+        ? "Guardando…"
+        : travel
+          ? "Viajar a esta ciudad"
+          : "Comenzar mi viaje"}
+    </Button>
   );
   return (
     <section className="screen destination-screen">
@@ -75,7 +95,7 @@ export function DestinationPicker({
             </Button>
           ))}
         </div>
-        <article className="destination-preview">
+        <article className="destination-preview" aria-live="polite">
           {selected ? (
             <>
               <LandmarkArt cityId={selected.id} />
@@ -104,20 +124,19 @@ export function DestinationPicker({
         <Button variant="outline" onClick={onBack}>
           Volver
         </Button>
-        <Button variant="outline" onClick={onMap}>
-          Ver mapa
+        <Button asChild variant="outline">
+          <Link {...mapLink}>Ver mapa</Link>
         </Button>
-        <Button
-          data-primary
-          disabled={!selected || pending}
-          onClick={() => selected && onChoose(selected.id)}
-        >
-          {pending
-            ? "Guardando…"
-            : travel
-              ? "Viajar a esta ciudad"
-              : "Comenzar mi viaje"}
-        </Button>
+        {requireConfirmation ? (
+          <ConfirmDialog
+            confirmOrigin
+            disabled={!selected || pending}
+            onConfirm={choose}
+            trigger={chooseButton}
+          />
+        ) : (
+          chooseButton
+        )}
       </div>
     </section>
   );

@@ -23,12 +23,14 @@ const cities: City[] = [
 ];
 
 describe("Selección accesible del mapa", () => {
-  it("empieza sin selección y permite elegir con el teclado", () => {
+  it("empieza sin selección y permite elegir con un control nativo", () => {
     const choose = vi.fn();
     render(<AtlasMap cities={cities} selectedId={null} onSelect={choose} />);
-    const pin = screen.getByRole("button", { name: "Elegir Madrid" });
-    expect(pin).toHaveAttribute("aria-pressed", "false");
-    fireEvent.keyDown(pin, { key: "Enter" });
+    const control = screen.getByRole("combobox", {
+      name: "Elegir ciudad en el mapa",
+    });
+    expect(control).toHaveValue("");
+    fireEvent.change(control, { target: { value: "madrid" } });
     expect(choose).toHaveBeenCalledWith("madrid");
   });
   it("no permite elegir ciudades bloqueadas", () => {
@@ -40,10 +42,11 @@ describe("Selección accesible del mapa", () => {
         onSelect={choose}
       />,
     );
-    const pin = screen.getByRole("button", { name: "Elegir Madrid" });
-    expect(pin).toHaveAttribute("aria-disabled", "true");
-    fireEvent.click(pin);
-    fireEvent.keyDown(pin, { key: "Enter" });
+    const control = screen.getByRole("combobox", {
+      name: "Elegir ciudad en el mapa",
+    });
+    expect(screen.getByRole("option", { name: "Madrid" })).toBeDisabled();
+    fireEvent.change(control, { target: { value: "madrid" } });
     expect(choose).not.toHaveBeenCalled();
   });
 });

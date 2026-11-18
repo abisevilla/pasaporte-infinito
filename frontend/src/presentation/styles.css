@@ -25,19 +25,22 @@ body,
   margin: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
 }
-body {
-  min-width: 280px;
+@media (pointer: fine) {
+  html {
+    overscroll-behavior: none;
+  }
 }
 button,
 input {
   font: inherit;
 }
 button,
-a {
-  -webkit-tap-highlight-color: transparent;
+a,
+select,
+.answer-option {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: #a54d3326;
 }
 button {
   cursor: pointer;
@@ -54,8 +57,14 @@ a {
   outline: 3px solid var(--terracotta);
   outline-offset: 3px;
 }
-[data-screen-title]:focus {
-  outline: none;
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: max(8px, env(safe-area-inset-top));
+  left: max(8px, env(safe-area-inset-left));
+}
+.skip-link:not(:focus) {
+  clip-path: inset(50%);
 }
 h1,
 h2,
@@ -66,6 +75,9 @@ h1,
 h2 {
   font-family: "Iowan Old Style", Palatino, Georgia, serif;
   font-weight: 400;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  scroll-margin-top: 12px;
 }
 h1 {
   font-size: clamp(1.5rem, 3.7vw, 3rem);
@@ -94,7 +106,9 @@ kbd {
   width: min(100%, 1280px);
   height: 100dvh;
   margin: auto;
-  padding: 0 clamp(12px, 4vw, 55px);
+  padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom);
+  padding-inline: max(clamp(12px, 4vw, 55px), env(safe-area-inset-left))
+    max(clamp(12px, 4vw, 55px), env(safe-area-inset-right));
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -120,6 +134,9 @@ kbd {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-align: left;
+}
+.wordmark:hover {
+  text-decoration: underline;
 }
 .site-header nav {
   display: flex;
@@ -178,6 +195,7 @@ main {
   flex: 0 0 auto;
   display: flex;
   justify-content: end;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
@@ -193,6 +211,7 @@ main {
   font-size: 12px;
   font-weight: 550;
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 .button-primary {
   background: var(--ink);
@@ -299,7 +318,7 @@ main {
   flex: 1 1 0;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 25px;
 }
 .city-choices {
@@ -371,7 +390,7 @@ main {
 }
 .reader-viewport {
   flex: 1 1 0;
-  min-height: 0;
+  min-height: 2.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -458,8 +477,11 @@ main {
   background: #faf8f2;
   border-radius: 5px;
   font-size: 16px;
+  min-width: 0;
+  overflow-wrap: anywhere;
   cursor: pointer;
 }
+.answer-grid:not(:disabled) .answer-option:hover,
 .answer-option.chosen {
   background: #e2e8d6;
   border-color: var(--ink);
@@ -517,19 +539,26 @@ main {
   border-radius: 3px;
   font-size: 11px;
 }
+.map-tabs button:hover,
 .map-tabs button[aria-pressed="true"] {
   background: var(--ink);
   color: white;
 }
-.map-hint {
-  color: #536457;
-  font-size: 10px;
+.atlas-toolbar select {
+  min-width: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  border: 1px solid #bac5b3;
+  border-radius: 3px;
+  padding: 4px;
+  font-size: 11px;
 }
 .world-map {
   flex: 1 1 0;
   width: 100%;
   min-height: 0;
   touch-action: none;
+  user-select: none;
   cursor: grab;
 }
 .world-map:active {
@@ -564,8 +593,11 @@ main {
 .map-pin.visited .pin-dot {
   fill: #3e7664;
 }
-.map-pin[aria-disabled="true"] {
+.map-pin[data-unavailable="true"] {
   cursor: default;
+}
+.map-pin[data-unavailable="false"]:hover .pin-dot {
+  fill: var(--ink);
 }
 .map-pin text {
   font-size: 12px;
@@ -592,11 +624,7 @@ main {
   justify-content: space-between;
   gap: 10px;
 }
-.map-footer > span {
-  font-size: 10px;
-  color: #536457;
-}
-.zoom-buttons {
+.map-controls {
   display: flex;
   gap: 5px;
 }
@@ -615,6 +643,8 @@ main {
   z-index: 21;
   width: min(92vw, 480px);
   max-height: 95dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -634,6 +664,7 @@ main {
   justify-content: end;
   gap: 10px;
   margin-top: 22px;
+  flex-wrap: wrap;
 }
 .sr-only {
   position: absolute;
@@ -763,9 +794,6 @@ main {
   .atlas-toolbar {
     padding: 7px 7px 0;
   }
-  .map-hint {
-    display: none;
-  }
   .map-tabs button {
     padding: 6px 10px;
     font-size: 10px;
@@ -773,8 +801,12 @@ main {
   .map-footer {
     padding: 0 7px 7px;
   }
-  .map-footer > span {
-    font-size: 8px;
+  .map-footer {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .map-controls .button {
+    min-width: 30px;
   }
   .map-selection {
     font-size: 10px;
@@ -1201,15 +1233,14 @@ main {
 .journey-end-line {
   stroke: currentColor;
   stroke-width: 2;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
   animation: journey-route-close 1.6s ease both;
 }
 .journey-end-marker {
   stroke: var(--terracotta);
   stroke-width: 2;
   fill: var(--paper);
-  transform-origin: 385px 70px;
+  transform-box: fill-box;
+  transform-origin: center;
   animation: journey-marker-settle 1.5s ease both;
 }
 .journey-end-book {
@@ -1278,11 +1309,9 @@ main {
 }
 @keyframes journey-route-close {
   from {
-    stroke-dashoffset: 1;
     opacity: 0.25;
   }
   to {
-    stroke-dashoffset: 0;
     opacity: 1;
   }
 }
@@ -1343,12 +1372,51 @@ main {
     transform: none;
   }
   .journey-end-line {
-    stroke-dashoffset: 0;
     opacity: 1;
   }
   .journey-end-marker,
   .ending-screen.is-failed > .screen-heading {
     opacity: 1;
     transform: none;
+  }
+}
+
+.game-hud,
+.reader-pagination {
+  font-variant-numeric: tabular-nums;
+}
+.destination-preview,
+.scene-reading,
+.welcome-instructions {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 319px), (max-height: 359px) {
+  .app-shell {
+    height: auto;
+    min-height: 100dvh;
+  }
+  main,
+  .exploration-body,
+  .paged-reader {
+    flex: 1 0 auto;
+  }
+  .screen {
+    height: auto;
+  }
+  .site-header,
+  .site-header nav,
+  .atlas-toolbar {
+    flex-wrap: wrap;
+  }
+  .destination-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .reader-viewport {
+    flex: 0 0 7rem;
+  }
+  .world-map {
+    flex: 0 0 auto;
+    aspect-ratio: 900 / 430;
   }
 }

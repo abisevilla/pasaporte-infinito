@@ -19,7 +19,7 @@ test("aventura con teclado, ayuda, fuentes, cuaderno y diálogo", async ({
   ).toHaveAttribute("aria-pressed", "true");
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("heading", { name: "Madrid", exact: true }),
+    page.getByRole("heading", { name: "Madrid", exact: true, level: 1 }),
   ).toBeVisible();
   for (let count = 0; count < 20; count++) {
     await page.keyboard.press("ArrowRight");
@@ -46,7 +46,7 @@ test("aventura con teclado, ayuda, fuentes, cuaderno y diálogo", async ({
     page.getByRole("heading", { name: "Tu cuaderno de viaje" }),
   ).toBeVisible();
   await fitsViewport(page);
-  await page.getByRole("button", { name: "Fuentes", exact: true }).click();
+  await page.getByRole("link", { name: "Fuentes", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Fuentes de la escena" }),
   ).toBeVisible();
@@ -107,7 +107,7 @@ test("pantallas pequeñas, texto paginado y ausencia de scroll", async ({
     await page.setViewportSize(viewport);
     await page.goto("/");
     await expect(
-      page.getByRole("button", { name: "Elegir mi origen →" }),
+      page.getByRole("link", { name: "Elegir mi origen →" }),
     ).toBeVisible();
     await fitsViewport(page);
     await page.keyboard.press("h");
@@ -131,18 +131,21 @@ test("pantallas pequeñas, texto paginado y ausencia de scroll", async ({
     await page.keyboard.press("Escape");
     await page.keyboard.press("ArrowRight");
     await fitsViewport(page);
-    await page.getByRole("button", { name: "Ver mapa" }).click();
+    await page.getByRole("link", { name: "Ver mapa" }).click();
     await fitsViewport(page);
     await page.keyboard.press("Escape");
     await page.keyboard.press("ArrowDown");
     await page.keyboard.press("Enter");
     await expect(
-      page.getByRole("heading", { name: "Madrid", exact: true }),
+      page.getByRole("heading", { name: "Madrid", exact: true, level: 1 }),
     ).toBeVisible();
     await fitsViewport(page);
-    await page.getByRole("button", { name: "Fuentes", exact: true }).click();
+    await page.getByRole("link", { name: "Fuentes", exact: true }).click();
     await fitsViewport(page);
     await page.keyboard.press("Escape");
+    await expect(
+      page.getByRole("heading", { name: "Madrid", exact: true, level: 1 }),
+    ).toBeVisible();
     for (let index = 1; index <= 3; index++)
       await page
         .getByRole("button", { name: `Registrar escena ${index} de 3` })

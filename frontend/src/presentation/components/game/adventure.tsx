@@ -1,5 +1,7 @@
 import { useState } from "react";
-import type { Game, GameAction, Scene } from "@/shared/types";
+import { Link, type LinkProps } from "react-router-dom";
+import type { Game, GameAction } from "@/shared/types";
+import { ConfirmDialog } from "../ui/confirm-dialog";
 import { Button } from "../ui/button";
 import { PagedReader } from "./paged-reader";
 import { JourneyEndArt } from "./journey-end-art";
@@ -11,18 +13,18 @@ export function Adventure({
   onSceneChange,
   pending,
   decide,
-  onSources,
+  sourcesLink,
   onRestart,
-  onJournal,
+  journalLink,
 }: {
   game: Game;
   readingSceneId: string | null;
   onSceneChange: (id: string) => void;
   pending: boolean;
   decide: (action: GameAction, onSuccess?: (game: Game) => void) => void;
-  onSources: (scene: Scene) => void;
+  sourcesLink: (sceneId: string) => LinkProps;
   onRestart: () => void;
-  onJournal: () => void;
+  journalLink: LinkProps;
 }) {
   const firstUnread = game.scenes.findIndex(
     (scene) => !game.exploredSceneIds.includes(scene.id),
@@ -76,12 +78,18 @@ export function Adventure({
           />
         )}
         <div className="screen-actions">
-          <Button variant="outline" onClick={onJournal}>
-            Abrir cuaderno de viaje
+          <Button asChild variant="outline">
+            <Link {...journalLink}>Abrir cuaderno de viaje</Link>
           </Button>
-          <Button data-primary onClick={onRestart}>
-            Comenzar otra aventura
-          </Button>
+          <ConfirmDialog
+            disabled={pending}
+            onConfirm={onRestart}
+            trigger={
+              <Button data-primary disabled={pending}>
+                Comenzar otra aventura
+              </Button>
+            }
+          />
         </div>
       </section>
     );
@@ -109,6 +117,7 @@ export function Adventure({
                 data-choice
                 type="radio"
                 name="answer"
+                autoComplete="off"
                 value={option.id}
                 checked={optionId === option.id}
                 onChange={() => setOptionId(option.id)}
@@ -120,8 +129,8 @@ export function Adventure({
           ))}
         </fieldset>
         <div className="screen-actions">
-          <Button variant="outline" onClick={onJournal}>
-            Repasar cuaderno
+          <Button asChild variant="outline">
+            <Link {...journalLink}>Repasar cuaderno</Link>
           </Button>
           <Button
             data-primary
@@ -137,7 +146,7 @@ export function Adventure({
               }
             }}
           >
-            Comprobar respuesta
+            {pending ? "Comprobando…" : "Comprobar respuesta"}
           </Button>
         </div>
       </section>
@@ -159,7 +168,9 @@ export function Adventure({
           <span>{city.country}</span>
         </aside>
         <article className="scene-reading">
-          <h2 className="reading-title">{scene.title}</h2>
+          <h2 className="reading-title" aria-live="polite">
+            {scene.title}
+          </h2>
           <PagedReader
             key={scene.id}
             label="Escena"
@@ -176,8 +187,8 @@ export function Adventure({
         >
           ← Anterior
         </Button>
-        <Button variant="outline" onClick={() => onSources(scene)}>
-          Fuentes
+        <Button asChild variant="outline">
+          <Link {...sourcesLink(scene.id)}>Fuentes</Link>
         </Button>
         <Button
           data-primary
@@ -191,7 +202,7 @@ export function Adventure({
             })
           }
         >
-          Registrar escena {sceneIndex + 1} de 3
+          {pending ? "Guardando…" : `Registrar escena ${sceneIndex + 1} de 3`}
         </Button>
         <Button
           data-screen-next

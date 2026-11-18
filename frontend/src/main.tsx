@@ -9,7 +9,7 @@ import "./presentation/styles.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter useTransitions={false}>
         <Routes>
           <Route path="*" element={<GameScreen />} />
         </Routes>

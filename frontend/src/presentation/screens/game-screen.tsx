@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Compass } from "lucide-react";
 import { useGame } from "@/business/game/use-game";
-import type { GameAction, Scene } from "@/shared/types";
+import type { GameAction } from "@/shared/types";
 import { useKeyboardNavigation } from "../hooks/use-keyboard-navigation";
 import { Button } from "../components/ui/button";
 import { ConfirmDialog } from "../components/ui/confirm-dialog";
@@ -13,17 +14,31 @@ import { PagedReader } from "../components/game/paged-reader";
 import { PassportStamp } from "../components/game/passport-stamp";
 import { KeyboardGuide } from "../components/game/keyboard-guide";
 
-type Screen =
-  | "home"
-  | "welcome"
-  | "destinations"
-  | "help"
-  | "journal"
-  | "sources"
-  | "map"
-  | "stamp"
-  | "feedback"
-  | "adventure";
+const screens = [
+  "home",
+  "welcome",
+  "destinations",
+  "help",
+  "journal",
+  "sources",
+  "map",
+  "stamp",
+  "feedback",
+  "adventure",
+] as const;
+type Screen = (typeof screens)[number];
+
+function screenUrl(screen: Screen, sceneId?: string, originMap = false) {
+  const params = new URLSearchParams();
+  if (screen !== "home") params.set("pantalla", screen);
+  if (sceneId) params.set("fuente", sceneId);
+  if (originMap) params.set("modo", "origen");
+  return { search: params.toString() };
+}
+
+function isScreen(value: string | null): value is Screen {
+  return screens.some((screen) => screen === value);
+}
 const helpText =
   "↑ / ↓: elegir una ciudad o respuesta. Si no hay opciones, mover el foco entre los controles.\n\n← / →: cambiar de escena, entrada del cuaderno o página de texto. En destinos cambian la ciudad seleccionada. Navegar por una escena no la registra.\n\nEnter: confirmar la opción elegida o activar el botón enfocado. Espacio: activar un botón o marcar una respuesta. Tab / Mayús + Tab: recorrer todos los controles.\n\nEscape o Retroceso: volver. H o ?: abrir esta ayuda. J: abrir o cerrar el cuaderno. Inicio / Fin: primera o última opción. Re Pág / Av Pág: cambiar de página de texto.\n\nTres escenas y tres preguntas por ciudad. Debes registrar las tres escenas para abrir el desafío. El tercer error en una ciudad termina la aventura; el contador se reinicia al viajar. Tres sellos completan tu itinerario.\n\nEl progreso se guarda en el servidor. Conserva la cookie de este navegador para recuperar tu partida. Puedes jugar con teclado, ratón o controles táctiles. El contenido largo se reparte en páginas, sin desplazamiento vertical.";
 
@@ -31,9 +46,20 @@ export function GameScreen() {
   const state = useGame();
   const { catalog, current, create, action, pending } = state;
   const game = current.data;
-  const [screen, setScreen] = useState<Screen>("home");
-  const [history, setHistory] = useState<Screen[]>([]);
-  const [sourceScene, setSourceScene] = useState<Scene | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const requested = params.get("pantalla");
+  const screen = isScreen(requested) ? requested : "home";
+  const previous = location.state?.previous as Screen | undefined;
+  const restartConfirmed = location.state?.restartGameId === game?.id;
+  const sourceId = params.get("fuente");
+  const routesMap = game?.phase === "travel" && params.get("modo") !== "origen";
+  const sourceScene =
+    game?.scenes.find((scene) => scene.id === sourceId) ??
+    game?.journal
+      .flatMap((city) => city.scenes)
+      .find((scene) => scene.id === sourceId);
   const [mapSelection, setMapSelection] = useState<string | null>(null);
   const [readingSceneId, setReadingSceneId] = useState<string | null>(null);
   const [journalIndex, setJournalIndex] = useState(0);
@@ -42,29 +68,53 @@ export function GameScreen() {
     cityId: string;
   } | null>(null);
   const root = useRef<HTMLDivElement>(null);
-  const view = screen === "home" ? (game ? "adventure" : "welcome") : screen;
+  const needsGame = ["adventure", "journal", "feedback", "stamp"].includes(
+    screen,
+  );
+  const view =
+    screen === "home" ||
+    (!game && needsGame) ||
+    (screen === "sources" && !sourceScene) ||
+    (screen === "feedback" && !game?.feedback) ||
+    (screen === "stamp" && (!earnedStamp || earnedStamp.gameId !== game?.id))
+      ? game
+        ? "adventure"
+        : "welcome"
+      : screen;
   const error = catalog.error ?? current.error ?? create.error ?? action.error;
+  function setScreen(next: Screen) {
+    void navigate(screenUrl(next), { replace: true });
+  }
+  function screenLink(next: Screen, sceneId?: string) {
+    return {
+      to: screenUrl(next, sceneId, next === "map" && view === "destinations"),
+      state: { previous: view },
+    };
+  }
   function open(next: Screen) {
     if (next === view) return;
-    if (next === "destinations") setMapSelection(null);
-    setHistory((previous) => [...previous, view]);
-    setScreen(next);
+    const { to, state } = screenLink(next);
+    void navigate(to, { state });
   }
   function back() {
-    const previous = history.at(-1);
-    setHistory((items) => items.slice(0, -1));
-    setScreen(previous ?? "home");
+    if (previous) void navigate(-1);
+    else if (screen !== "home") setScreen("home");
   }
-  function openSources(scene: Scene) {
-    setSourceScene(scene);
-    open("sources");
+  function sourcesLink(sceneId: string) {
+    return screenLink("sources", sceneId);
   }
   function newJourney() {
     setMapSelection(null);
     create.reset();
     action.reset();
-    setHistory(["home"]);
-    setScreen("destinations");
+    const { to, state } = screenLink("destinations");
+    void navigate(to, {
+      replace: view === "destinations",
+      state: {
+        ...(view === "destinations" ? location.state : state),
+        restartGameId: game?.id,
+      },
+    });
   }
   function choose(initialCityId: string) {
     create.mutate(
@@ -80,7 +130,6 @@ export function GameScreen() {
           setJournalIndex(0);
           setEarnedStamp(null);
           setScreen("home");
-          setHistory([]);
         },
       },
     );
@@ -103,7 +152,6 @@ export function GameScreen() {
           newStamp ? { gameId: updated.id, cityId: newStamp } : null,
         );
         setScreen("feedback");
-        setHistory([]);
       }
     });
   }
@@ -129,7 +177,10 @@ export function GameScreen() {
             No se pudo completar la decisión
           </h1>
         </div>
-        <PagedReader text={error.message} label="Error de conexión" />
+        <PagedReader
+          text={`${error.message}\n\nRecupera tu progreso para volver a intentarlo.`}
+          label="Error de conexión"
+        />
         <div className="screen-actions">
           <Button
             data-primary
@@ -148,7 +199,7 @@ export function GameScreen() {
   else if (!ready)
     content = (
       <section className="screen loading-state" role="status">
-        <Compass size={40} />
+        <Compass aria-hidden="true" size={40} />
         <p>Desplegando el atlas…</p>
       </section>
     );
@@ -191,20 +242,32 @@ export function GameScreen() {
           </div>
         </div>
         <div className="screen-actions">
-          <Button variant="outline" onClick={() => open("help")}>
-            Controles y reglas
+          <Button asChild variant="outline">
+            <Link {...screenLink("help")}>Controles y reglas</Link>
           </Button>
           {game && (
-            <Button variant="outline" onClick={() => setScreen("home")}>
-              Continuar mi partida
+            <Button asChild variant="outline">
+              <Link to={screenUrl("home")} replace>
+                Reanudar viaje
+              </Link>
             </Button>
           )}
-          <Button
-            data-primary
-            data-screen-next
-            onClick={() => open("destinations")}
-          >
-            Elegir mi origen →
+          <Button asChild data-primary data-screen-next>
+            <Link
+              {...screenLink("destinations")}
+              onClick={(event) => {
+                if (
+                  event.button === 0 &&
+                  !event.altKey &&
+                  !event.ctrlKey &&
+                  !event.metaKey &&
+                  !event.shiftKey
+                )
+                  setMapSelection(null);
+              }}
+            >
+              Elegir mi origen →
+            </Link>
           </Button>
         </div>
       </section>
@@ -233,7 +296,7 @@ export function GameScreen() {
         index={journalIndex}
         onIndexChange={setJournalIndex}
         onBack={back}
-        onSources={openSources}
+        sourcesLink={sourcesLink}
       />
     );
   else if (view === "sources" && sourceScene)
@@ -247,20 +310,32 @@ export function GameScreen() {
           </h1>
         </div>
         <AtlasMap
-          cities={
-            game?.phase === "travel" && history.at(-1) !== "destinations"
-              ? game.cities
-              : catalog.data.cities
-          }
+          cities={routesMap ? game.cities : catalog.data.cities}
           selectedId={mapSelection}
           onSelect={setMapSelection}
           disabled={pending}
+          region={params.get("region")}
+          onRegionChange={(region) => {
+            if (region === "atlantic") params.delete("region");
+            else params.set("region", region);
+            void navigate(
+              { search: params.toString() },
+              { replace: true, state: location.state },
+            );
+          }}
         />
         <div className="screen-actions">
-          <Button data-primary onClick={back}>
+          <Button
+            data-primary
+            onClick={
+              previous
+                ? back
+                : () => setScreen(routesMap ? "home" : "destinations")
+            }
+          >
             Volver a destinos
           </Button>
-          <span className="map-selection">
+          <span className="map-selection" role="status">
             {mapSelection
               ? catalog.data.cities.find((city) => city.id === mapSelection)
                   ?.name
@@ -280,13 +355,16 @@ export function GameScreen() {
         selectedId={mapSelection}
         onSelect={setMapSelection}
         pending={pending}
+        requireConfirmation={
+          view === "destinations" && !!game && !restartConfirmed
+        }
         travel={view !== "destinations"}
         onChoose={(id) =>
           view === "destinations"
             ? choose(id)
             : decide({ type: "chooseRoute", cityId: id })
         }
-        onMap={() => open("map")}
+        mapLink={screenLink("map")}
         onBack={view === "destinations" ? back : () => open("journal")}
       />
     );
@@ -298,7 +376,6 @@ export function GameScreen() {
         cityId={earnedStamp.cityId}
         onContinue={() => {
           setEarnedStamp(null);
-          setHistory([]);
           setScreen("home");
         }}
       />
@@ -323,8 +400,8 @@ export function GameScreen() {
           text={game.feedback.explanation}
         />
         <div className="screen-actions">
-          <Button variant="outline" onClick={() => open("journal")}>
-            Repasar cuaderno
+          <Button asChild variant="outline">
+            <Link {...screenLink("journal")}>Repasar cuaderno</Link>
           </Button>
           <Button
             data-primary
@@ -333,7 +410,9 @@ export function GameScreen() {
               setScreen(earnedStamp?.gameId === game.id ? "stamp" : "home")
             }
           >
-            Continuar →
+            {earnedStamp?.gameId === game.id
+              ? "Ver sello →"
+              : "Seguir el viaje →"}
           </Button>
         </div>
       </section>
@@ -347,22 +426,27 @@ export function GameScreen() {
         onSceneChange={setReadingSceneId}
         pending={pending}
         decide={decide}
-        onSources={openSources}
+        sourcesLink={sourcesLink}
         onRestart={newJourney}
-        onJournal={() => open("journal")}
+        journalLink={screenLink("journal")}
       />
     );
   return (
     <div className="app-shell" ref={root}>
+      <a className="skip-link button button-primary" href="#main">
+        Saltar al contenido
+      </a>
       <header className="site-header">
-        <button
+        <Link
+          replace={view === "welcome"}
           className="wordmark"
-          onClick={() => open("welcome")}
+          to={screenUrl("welcome")}
+          state={view === "welcome" ? location.state : { previous: view }}
           aria-label="Ir al inicio"
         >
-          <Compass size={25} />
-          <span>PASAPORTE INFINITO</span>
-        </button>
+          <Compass aria-hidden="true" size={25} />
+          <span translate="no">PASAPORTE INFINITO</span>
+        </Link>
         <nav aria-label="Menú del juego">
           <Button
             variant="ghost"
@@ -397,7 +481,10 @@ export function GameScreen() {
           </span>
         </div>
       )}
-      <main id="main" aria-busy={pending}>
+      <span className="sr-only" role="status">
+        {pending ? "Guardando progreso…" : ""}
+      </span>
+      <main id="main" tabIndex={-1} aria-busy={pending}>
         {content}
       </main>
       <footer className="site-footer">

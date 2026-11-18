@@ -1,9 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { geoMercator, geoPath } from "d3-geo";
 import { select } from "d3-selection";
 import { zoom, zoomIdentity, type ZoomBehavior } from "d3-zoom";
 import type { GeoPermissibleObjects } from "d3-geo";
-import { Minus, Plus, RotateCcw } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  Minus,
+  Plus,
+  RotateCcw,
+} from "lucide-react";
 import landData from "@/assets/land.geojson?raw";
 import type { City, Game } from "@/shared/types";
 import { Button } from "../ui/button";
@@ -21,13 +29,17 @@ export function AtlasMap({
   selectedId,
   onSelect,
   disabled = false,
+  region,
+  onRegionChange,
 }: {
   cities: MapCity[];
   selectedId: string | null;
   onSelect: (cityId: string) => void;
   disabled?: boolean;
+  region?: string | null;
+  onRegionChange?: (region: string) => void;
 }) {
-  const [view, setView] = useState<keyof typeof views>("atlantic");
+  const view = region === "europe" || region === "usa" ? region : "atlantic";
   const svgRef = useRef<SVGSVGElement>(null);
   const layerRef = useRef<SVGGElement>(null);
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
@@ -63,6 +75,18 @@ export function AtlasMap({
     if (svgRef.current && zoomRef.current)
       select(svgRef.current).call(zoomRef.current.scaleBy, factor);
   }
+  function panMap(x: number, y: number) {
+    if (svgRef.current && zoomRef.current)
+      select(svgRef.current).call(zoomRef.current.translateBy, x, y);
+  }
+  const canSelect = (city: MapCity) =>
+    !disabled && (!city.mapStatus || city.mapStatus === "available");
+  const directions = [
+    { label: "Mover mapa a la izquierda", x: 90, y: 0, Icon: ArrowLeft },
+    { label: "Mover mapa hacia arriba", x: 0, y: 90, Icon: ArrowUp },
+    { label: "Mover mapa hacia abajo", x: 0, y: -90, Icon: ArrowDown },
+    { label: "Mover mapa a la derecha", x: -90, y: 0, Icon: ArrowRight },
+  ];
   return (
     <section className="atlas" aria-label="Mapa de destinos">
       <div className="atlas-toolbar">
@@ -71,19 +95,38 @@ export function AtlasMap({
             <button
               key={id}
               aria-pressed={view === id}
-              onClick={() => setView(id as keyof typeof views)}
+              onClick={() => onRegionChange?.(id)}
             >
               {item.label}
             </button>
           ))}
         </div>
-        <span className="map-hint">Desplaza y amplía para explorar</span>
+        <select
+          aria-label="Elegir ciudad en el mapa"
+          name="ciudad"
+          autoComplete="off"
+          disabled={disabled}
+          value={selectedId ?? ""}
+          onChange={(event) => {
+            const city = cities.find((item) => item.id === event.target.value);
+            if (city && canSelect(city)) onSelect(city.id);
+          }}
+        >
+          <option value="" disabled>
+            Elegir ciudad
+          </option>
+          {cities.map((city) => (
+            <option key={city.id} value={city.id} disabled={!canSelect(city)}>
+              {city.name}
+            </option>
+          ))}
+        </select>
       </div>
       <svg
         ref={svgRef}
         viewBox="0 0 900 430"
         className="world-map"
-        aria-label="Atlas interactivo. También puedes elegir destino en la lista inferior."
+        aria-hidden="true"
       >
         <defs>
           <pattern
@@ -130,8 +173,7 @@ export function AtlasMap({
             const point = projection(city.coordinates as [number, number]);
             if (!point) return null;
             const [x, y] = point;
-            const enabled =
-              !disabled && (!city.mapStatus || city.mapStatus === "available");
+            const enabled = canSelect(city);
             const selected = city.id === selectedId;
             const left = ["madrid", "barcelona", "washington"].includes(
               city.id,
@@ -143,19 +185,9 @@ export function AtlasMap({
                 key={city.id}
                 transform={`translate(${x},${y})`}
                 className={`map-pin ${selected ? "selected" : ""} ${city.mapStatus ?? "available"}`}
-                role="button"
-                tabIndex={enabled ? 0 : -1}
-                aria-disabled={!enabled}
-                aria-label={`Elegir ${city.name}`}
-                aria-pressed={selected}
+                data-unavailable={!enabled}
                 onClick={() => {
                   if (enabled) onSelect(city.id);
-                }}
-                onKeyDown={(event) => {
-                  if (enabled && ["Enter", " "].includes(event.key)) {
-                    event.preventDefault();
-                    onSelect(city.id);
-                  }
                 }}
               >
                 <circle r="17" className="pin-hit" />
@@ -179,17 +211,27 @@ export function AtlasMap({
         </g>
       </svg>
       <div className="map-footer">
-        <span>
-          <i /> Destinos culturales · 6 ciudades
-        </span>
-        <div className="zoom-buttons">
+        <div className="map-controls" role="group" aria-label="Desplazar mapa">
+          {directions.map(({ label, x, y, Icon }) => (
+            <Button
+              key={label}
+              variant="outline"
+              size="icon"
+              aria-label={label}
+              onClick={() => panMap(x, y)}
+            >
+              <Icon aria-hidden="true" size={16} />
+            </Button>
+          ))}
+        </div>
+        <div className="map-controls" role="group" aria-label="Escala del mapa">
           <Button
             variant="outline"
             size="icon"
             aria-label="Ampliar mapa"
             onClick={() => scaleMap(1.4)}
           >
-            <Plus size={16} />
+            <Plus aria-hidden="true" size={16} />
           </Button>
           <Button
             variant="outline"
@@ -197,7 +239,7 @@ export function AtlasMap({
             aria-label="Reducir mapa"
             onClick={() => scaleMap(1 / 1.4)}
           >
-            <Minus size={16} />
+            <Minus aria-hidden="true" size={16} />
           </Button>
           <Button
             variant="outline"
@@ -211,7 +253,7 @@ export function AtlasMap({
                 );
             }}
           >
-            <RotateCcw size={15} />
+            <RotateCcw aria-hidden="true" size={15} />
           </Button>
         </div>
       </div>
