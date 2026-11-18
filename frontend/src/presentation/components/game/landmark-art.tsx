@@ -29,7 +29,7 @@ export function LandmarkArt({
             {[74, 108, 142, 176, 210, 244, 278, 312].map((x) => (
               <path key={x} d={`M${x} 124h13v49h-13z`} fill="var(--paper)" />
             ))}
-            <path d="M173 93L200 76L227 93Z" fill="var(--terracotta)" />
+            <path d="M173 93L200 76L227 93Z" fill="var(--stamp)" />
             <path d="M50 112H350M50 119H350" />
           </>
         )}
@@ -82,7 +82,7 @@ export function LandmarkArt({
             <path d="M156 192V159H244V192M164 159V145H236V159M173 145L180 105L189 86L184 71L178 59L165 30L173 26L190 56L202 67L211 74L223 119L231 145Z" />
             <path
               d="M194 69L198 54L203 49L211 52L215 67M197 52L190 43M202 49L201 37M208 49L214 38M213 53L224 47M165 30L159 18L170 9L180 21L173 26"
-              fill="var(--terracotta)"
+              fill="var(--stamp)"
             />
             <path d="M216 83L238 90L231 118L210 109ZM191 89L184 138M204 100L215 144M150 192H251" />
           </>

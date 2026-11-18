@@ -33,10 +33,13 @@ export function ConfirmDialog({
           </AlertDialog.Description>
           <div className="dialog-actions">
             <AlertDialog.Cancel asChild>
-              <Button variant="outline">Conservar viaje</Button>
+              <Button variant="ghost">Conservar viaje</Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <Button onClick={onConfirm}>
+              <Button
+                variant={confirmOrigin ? "danger" : "default"}
+                onClick={onConfirm}
+              >
                 {confirmOrigin ? "Sustituir partida" : "Elegir nuevo origen"}
               </Button>
             </AlertDialog.Action>

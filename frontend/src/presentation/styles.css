@@ -1,19 +1,11 @@
 @import "tailwindcss";
 
+@import "./material-theme.css";
+
 :root {
-  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
-  color: #203f49;
-  background: #f8f5ee;
-  --ink: #203f49;
-  --paper: #f8f5ee;
-  --terracotta: #a54d33;
-  --sun: #e4c493;
-  --stone: #c8b99b;
-  --land-soft: #dfdac6;
-  --glass: #a9bfc0;
-  --ocean: #e9efe9;
-  --land: #d5d7bd;
-  --coast: #b2b9a4;
+  font-family: var(--md-sys-font-ui);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
   font-synthesis: none;
 }
 * {
@@ -40,7 +32,11 @@ a,
 select,
 .answer-option {
   touch-action: manipulation;
-  -webkit-tap-highlight-color: #a54d3326;
+  -webkit-tap-highlight-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 15%,
+    transparent
+  );
 }
 button {
   cursor: pointer;
@@ -54,7 +50,7 @@ a {
   overflow-wrap: anywhere;
 }
 :focus-visible {
-  outline: 3px solid var(--terracotta);
+  outline: 3px solid var(--md-sys-color-primary);
   outline-offset: 3px;
 }
 .skip-link {
@@ -73,19 +69,18 @@ p {
 }
 h1,
 h2 {
-  font-family: "Iowan Old Style", Palatino, Georgia, serif;
-  font-weight: 400;
+  font-weight: 600;
   text-wrap: balance;
   overflow-wrap: anywhere;
   scroll-margin-top: 12px;
 }
 h1 {
-  font-size: clamp(1.5rem, 3.7vw, 3rem);
+  font-size: var(--md-sys-type-headline);
   line-height: 1.12;
   letter-spacing: -0.035em;
 }
 h2 {
-  font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+  font-size: var(--md-sys-type-title);
   line-height: 1.2;
 }
 p {
@@ -93,13 +88,13 @@ p {
 }
 kbd {
   display: inline-block;
-  border: 1px solid #b6c0b2;
+  border: 1px solid var(--md-sys-color-outline-variant);
   border-bottom-width: 2px;
   border-radius: 4px;
   padding: 1px 5px;
   font: inherit;
   font-size: 0.9em;
-  background: #faf9f3;
+  background: var(--paper);
   color: var(--ink);
 }
 .app-shell {
@@ -115,24 +110,24 @@ kbd {
 }
 .site-header {
   flex: 0 0 auto;
-  min-height: 62px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border-bottom: 1px solid #d5d9cc;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 .wordmark {
   display: flex;
   align-items: center;
   gap: 9px;
+  min-height: var(--md-sys-target);
   background: transparent;
   border: 0;
   padding: 5px;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
   text-align: left;
 }
 .wordmark:hover {
@@ -151,8 +146,8 @@ kbd {
   gap: 8px;
   min-height: 34px;
   font-size: 11px;
-  color: #536457;
-  border-bottom: 1px solid #dde0d5;
+  color: var(--md-sys-color-on-surface-variant);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 .game-hud > span:first-child {
   overflow: hidden;
@@ -178,17 +173,15 @@ main {
   flex: 0 0 auto;
   padding-bottom: 6px;
 }
-.eyebrow {
-  color: #536457;
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
+.screen-progress {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 12px;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
 }
 .screen-description {
   font-size: 12px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
   margin-top: 8px;
 }
 .screen-actions {
@@ -200,60 +193,84 @@ main {
   gap: 8px;
 }
 .button {
+  --button-bg: transparent;
+  --button-fg: var(--md-sys-color-primary);
+  --button-border: transparent;
+  --button-state: 0%;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 10px 17px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 550;
+  min-height: var(--md-sys-target);
+  min-width: var(--md-sys-target);
+  padding: 8px 20px;
+  border: 1px solid var(--button-border);
+  border-radius: var(--md-sys-shape-full);
+  background-color: color-mix(
+    in srgb,
+    var(--button-fg) var(--button-state),
+    var(--button-bg)
+  );
+  color: var(--button-fg);
+  font-size: var(--md-sys-type-label);
+  font-weight: 600;
   text-decoration: none;
   overflow-wrap: anywhere;
+  transition:
+    background-color var(--md-sys-motion-short) var(--md-sys-motion-standard),
+    box-shadow var(--md-sys-motion-short) var(--md-sys-motion-standard);
 }
-.button-primary {
-  background: var(--ink);
-  color: var(--paper);
+.button-filled {
+  --button-bg: var(--md-sys-color-primary);
+  --button-fg: var(--md-sys-color-on-primary);
 }
-.button-primary:hover:not(:disabled) {
-  background: #315763;
+.button-error {
+  --button-bg: var(--md-sys-color-error);
+  --button-fg: var(--md-sys-color-on-error);
 }
-.button-outline {
-  color: var(--ink);
-  background: #fcfaf4;
-  border-color: #bfc8b9;
+.button-tonal {
+  --button-bg: var(--md-sys-color-secondary-container);
+  --button-fg: var(--md-sys-color-on-secondary-container);
 }
-.button-outline:hover:not(:disabled),
-.button-ghost:hover:not(:disabled) {
-  background: #e4e8da;
+.button-outlined {
+  --button-border: var(--md-sys-color-outline);
 }
-.button-ghost {
-  color: var(--ink);
-  background: transparent;
+.button-text,
+.button-small {
+  padding-inline: 10px;
 }
 .button-small {
-  min-height: 32px;
-  padding: 5px 9px;
-  font-size: 11px;
+  font-size: var(--md-sys-type-label-small);
 }
 .button-icon {
-  min-height: 34px;
-  min-width: 34px;
   padding: 6px;
+}
+.button-filled:not(:disabled):hover {
+  box-shadow: var(--md-sys-elevation-1);
+}
+.button:not(:disabled):hover {
+  --button-state: 8%;
+}
+.button:not(:disabled):is(:focus-visible, :active) {
+  --button-state: 12%;
+}
+.button:disabled {
+  --button-bg: var(--md-sys-color-surface-container);
+  --button-fg: var(--md-sys-color-on-surface-variant);
+  --button-border: transparent;
+  opacity: 0.72;
 }
 .site-footer {
   flex: 0 0 auto;
   padding: 10px 0;
-  border-top: 1px solid #d5d9cc;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 .keyboard-guide {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 5px 18px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
   font-size: 10px;
 }
 .keyboard-guide > span {
@@ -263,56 +280,59 @@ main {
   white-space: nowrap;
 }
 .welcome-screen {
-  justify-content: center;
+  display: grid;
+  grid-template:
+    "copy chart" auto
+    "actions chart" auto / minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-content: center;
+  gap: clamp(12px, 3vh, 32px) clamp(24px, 5vw, 72px);
 }
-.welcome-screen h1 {
-  font-size: clamp(2rem, 5vw, 4.4rem);
+.welcome-copy {
+  grid-area: copy;
+  align-self: end;
 }
-.welcome-screen em {
-  color: var(--terracotta);
+.welcome-copy h1 {
+  max-width: 13ch;
+  font-size: var(--md-sys-type-display);
+  line-height: 0.98;
 }
-.welcome-body {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  gap: clamp(20px, 5vw, 80px);
+.welcome-copy p {
+  max-width: 38ch;
+  margin-top: clamp(12px, 3vh, 24px);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
 }
-.passport-emblem {
-  align-self: stretch;
-  width: 230px;
-  max-height: 280px;
-  padding: 25px;
+.welcome-screen .screen-actions {
+  grid-area: actions;
+  align-self: start;
+  justify-content: start;
+}
+.atlantic-chart {
+  grid-area: chart;
+  align-self: center;
+  justify-self: center;
+  display: block;
+  width: min(100%, 90dvh, 48rem);
+  height: auto;
   background: var(--ink);
-  color: #d8c49b;
-  border-radius: 5px 15px 15px 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 20px;
-  box-shadow:
-    inset 0 0 0 8px #244650,
-    inset 0 0 0 9px #c4ac7470;
-  font:
-    22px/1.5 Georgia,
-    serif;
-  letter-spacing: 0.12em;
-  text-align: center;
+  border-radius: var(--md-sys-shape-extra-large);
 }
-.welcome-instructions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 15px;
-  color: #536457;
-  max-width: 600px;
+.chart-grid {
+  fill: none;
+  stroke: var(--ocean);
+  stroke-opacity: 0.18;
 }
-.welcome-instructions p:first-child {
-  font:
-    clamp(17px, 2.1vw, 24px)/1.5 Georgia,
-    serif;
-  color: var(--ink);
+.chart-land {
+  fill: var(--land);
+}
+.chart-label {
+  fill: var(--ocean);
+  font: italic 24px var(--md-sys-font-story);
+}
+.atlantic-chart circle {
+  fill: var(--gold);
+  stroke: var(--ink);
+  stroke-width: 2;
 }
 .destination-layout {
   flex: 1 1 0;
@@ -325,38 +345,38 @@ main {
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: 9px;
+  grid-template-rows: repeat(3, minmax(var(--md-sys-target), 1fr));
+  gap: 8px;
 }
 .city-choices .button {
+  --button-bg: var(--md-sys-color-surface-container);
+  --button-fg: var(--md-sys-color-on-surface);
   min-width: 0;
-  min-height: 0;
-  padding: 12px;
+  padding: 10px 12px;
+  border-radius: var(--md-sys-shape-medium);
   flex-direction: column;
   align-items: start;
   text-align: left;
-  gap: 5px;
+  gap: 4px;
 }
 .city-choices .button > span {
-  font:
-    clamp(16px, 2vw, 23px)/1.1 Georgia,
-    serif;
+  font-size: var(--md-sys-type-title);
+  line-height: 1.15;
 }
 .city-choices small {
-  font-size: 10px;
-  color: #536457;
+  font-size: var(--md-sys-type-label-small);
+  color: var(--md-sys-color-on-surface-variant);
 }
 .city-choices [aria-pressed="true"] {
-  background: #e5e8d9;
-  border-color: var(--terracotta);
-  box-shadow: inset 0 0 0 1px var(--terracotta);
+  --button-bg: var(--md-sys-color-primary-container);
+  --button-fg: var(--md-sys-color-on-primary-container);
+  --button-border: var(--md-sys-color-primary);
 }
 .destination-preview {
   min-height: 0;
   padding: 20px;
-  background: #eeeee2;
-  border: 1px solid #d9ddcc;
-  border-radius: 5px;
+  background: var(--md-sys-color-surface-container-high);
+  border-radius: var(--md-sys-shape-large);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -374,12 +394,12 @@ main {
 .destination-preview > div {
   flex: 0 0 auto;
 }
-.destination-preview p:not(.eyebrow) {
+.destination-preview p {
   font-size: 13px;
   margin-top: 6px;
 }
 .destination-tagline {
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .paged-reader {
   flex: 1 1 0;
@@ -395,11 +415,9 @@ main {
   overflow: hidden;
 }
 .reader-copy {
-  font:
-    clamp(16px, 2vw, 23px)/1.65 "Iowan Old Style",
-    Georgia,
-    serif;
-  color: #314e51;
+  font: clamp(1rem, 2vw, 1.35rem)/1.6 var(--md-sys-font-story);
+  color: var(--ink);
+  max-width: 66ch;
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
@@ -416,11 +434,8 @@ main {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
   font-size: 11px;
-}
-.reader-pagination .button {
-  min-height: 28px;
 }
 .exploration-body {
   flex: 1 1 0;
@@ -435,10 +450,10 @@ main {
   align-items: start;
   justify-content: center;
   min-height: 0;
-  background: #eeeee3;
+  background: var(--md-sys-color-surface-container);
   padding: 20px;
   gap: 10px;
-  border-radius: 5px;
+  border-radius: var(--md-sys-shape-large);
 }
 .landmark-panel .landmark-art {
   flex: 0 1 auto;
@@ -446,7 +461,7 @@ main {
 }
 .landmark-panel span {
   font-size: 12px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .scene-reading {
   min-height: 0;
@@ -472,27 +487,36 @@ main {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px;
-  border: 1px solid #bac5b3;
-  background: #faf8f2;
-  border-radius: 5px;
+  min-height: var(--md-sys-target);
+  padding: 12px;
+  border: 1px solid var(--md-sys-color-outline);
+  background: var(--md-sys-color-surface);
+  border-radius: var(--md-sys-shape-medium);
   font-size: 16px;
   min-width: 0;
   overflow-wrap: anywhere;
   cursor: pointer;
 }
-.answer-grid:not(:disabled) .answer-option:hover,
-.answer-option.chosen {
-  background: #e2e8d6;
-  border-color: var(--ink);
+.answer-grid:not(:disabled) .answer-option:hover {
+  background: var(--md-sys-color-surface-container);
+}
+.answer-grid:not(:disabled) .answer-option:active,
+.answer-option:has(:checked) {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: var(--md-sys-color-on-secondary-container);
+}
+.answer-grid:disabled .answer-option {
+  opacity: 0.72;
+  cursor: not-allowed;
 }
 .answer-option:focus-within {
-  outline: 3px solid var(--terracotta);
+  outline: 3px solid var(--md-sys-color-primary);
   outline-offset: 2px;
 }
 .answer-option input {
   flex-shrink: 0;
-  accent-color: var(--ink);
+  accent-color: var(--md-sys-color-primary);
 }
 .stamp-strip {
   flex: 0 0 auto;
@@ -501,7 +525,7 @@ main {
   gap: 8px;
 }
 .stamp-strip span {
-  border: 1px dashed #8a9c7b;
+  border: 1px dashed var(--md-sys-color-outline);
   padding: 6px 10px;
   font-size: 12px;
 }
@@ -515,8 +539,8 @@ main {
   display: flex;
   flex-direction: column;
   background: var(--ocean);
-  border: 1px solid #cfd7cb;
-  border-radius: 4px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-large);
   overflow: hidden;
 }
 .atlas-toolbar {
@@ -528,30 +552,23 @@ main {
   gap: 10px;
 }
 .map-tabs {
+  flex: 0 0 auto;
   display: flex;
-  gap: 4px;
+  gap: 2px;
 }
-.map-tabs button {
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid #bac5b3;
-  padding: 6px 12px;
-  border-radius: 3px;
-  font-size: 11px;
-}
-.map-tabs button:hover,
-.map-tabs button[aria-pressed="true"] {
-  background: var(--ink);
-  color: white;
+.map-tabs [aria-pressed="true"] {
+  --button-bg: var(--md-sys-color-secondary-container);
+  --button-fg: var(--md-sys-color-on-secondary-container);
 }
 .atlas-toolbar select {
   min-width: 0;
-  background-color: var(--paper);
-  color: var(--ink);
-  border: 1px solid #bac5b3;
-  border-radius: 3px;
+  min-height: var(--md-sys-target);
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-small);
   padding: 4px;
-  font-size: 11px;
+  font-size: var(--md-sys-type-label-small);
 }
 .world-map {
   flex: 1 1 0;
@@ -568,8 +585,7 @@ main {
   font:
     italic 12px Georgia,
     serif;
-  letter-spacing: 0.2em;
-  fill: #6a806b;
+  fill: var(--md-sys-color-on-surface-variant);
 }
 .map-pin {
   cursor: pointer;
@@ -578,7 +594,7 @@ main {
   fill: transparent;
 }
 .pin-dot {
-  fill: var(--terracotta);
+  fill: var(--stamp);
   stroke: var(--paper);
   stroke-width: 3px;
 }
@@ -588,10 +604,10 @@ main {
 }
 .map-pin.locked .pin-dot,
 .map-pin.discarded .pin-dot {
-  fill: #748476;
+  fill: var(--md-sys-color-on-surface-variant);
 }
 .map-pin.visited .pin-dot {
-  fill: #3e7664;
+  fill: var(--md-sys-color-on-secondary-container);
 }
 .map-pin[data-unavailable="true"] {
   cursor: default;
@@ -608,8 +624,8 @@ main {
   stroke-width: 3px;
 }
 .compass {
-  fill: #536457;
-  stroke: #536457;
+  fill: var(--md-sys-color-on-surface-variant);
+  stroke: var(--md-sys-color-on-surface-variant);
   stroke-width: 1;
 }
 .compass text {
@@ -630,12 +646,12 @@ main {
 }
 .map-selection {
   font-size: 12px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background: #142f38a6;
+  background: var(--md-sys-color-scrim);
   z-index: 20;
 }
 .dialog-content {
@@ -648,16 +664,17 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--paper);
+  background: var(--md-sys-color-surface-container-high);
   padding: 24px;
-  border-radius: 5px;
+  border-radius: var(--md-sys-shape-extra-large);
+  box-shadow: var(--md-sys-elevation-3);
 }
 .dialog-content h2 {
   margin-bottom: 12px;
 }
 .dialog-content p {
   font-size: 14px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .dialog-actions {
   display: flex;
@@ -680,8 +697,7 @@ main {
     gap: 4px;
   }
   .wordmark {
-    font-size: 9px;
-    letter-spacing: 0.05em;
+    font-size: 11px;
     gap: 5px;
     max-width: 130px;
   }
@@ -706,7 +722,7 @@ main {
   .game-hud > span:last-child {
     display: none;
   }
-  .screen-heading .eyebrow {
+  .screen-heading .screen-progress {
     font-size: 9px;
   }
   .screen-description {
@@ -717,7 +733,6 @@ main {
     justify-content: space-between;
   }
   .screen-actions .button {
-    min-height: 38px;
     padding: 8px;
     font-size: 10px;
   }
@@ -728,15 +743,18 @@ main {
   .site-footer {
     padding: 7px 0;
   }
-  .passport-emblem {
-    display: none;
+  .welcome-screen {
+    grid-template:
+      "copy" auto
+      "chart" auto
+      "actions" auto / minmax(0, 1fr);
   }
-  .welcome-instructions {
-    font-size: 12px;
-    gap: 9px;
+  .welcome-copy h1 {
+    font-size: clamp(2.1rem, 8vw, 3.3rem);
   }
-  .welcome-screen h1 {
-    font-size: clamp(28px, 7vw, 44px);
+  .atlantic-chart {
+    justify-self: start;
+    width: min(100%, 45dvh);
   }
   .destination-layout {
     grid-template-columns: 1fr;
@@ -753,7 +771,7 @@ main {
     font-size: 17px;
   }
   .city-choices small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .destination-preview {
     padding: 12px;
@@ -766,12 +784,9 @@ main {
   .destination-preview h2 {
     font-size: 20px;
   }
-  .destination-preview p:not(.eyebrow) {
+  .destination-preview p {
     font-size: 11px;
     margin-top: 3px;
-  }
-  .destination-preview .eyebrow {
-    display: none;
   }
   .exploration-body {
     display: flex;
@@ -792,21 +807,17 @@ main {
     font-size: 14px;
   }
   .atlas-toolbar {
+    gap: 6px;
     padding: 7px 7px 0;
   }
-  .map-tabs button {
-    padding: 6px 10px;
+  .map-tabs .button {
+    padding: 6px;
     font-size: 10px;
   }
   .map-footer {
     padding: 0 7px 7px;
-  }
-  .map-footer {
     flex-wrap: wrap;
     gap: 5px;
-  }
-  .map-controls .button {
-    min-width: 30px;
   }
   .map-selection {
     font-size: 10px;
@@ -820,9 +831,6 @@ main {
   }
 }
 @media (max-height: 520px) {
-  .site-header {
-    min-height: 40px;
-  }
   .site-footer {
     padding: 4px 0;
   }
@@ -841,7 +849,7 @@ main {
   h1 {
     font-size: clamp(20px, 3vw, 28px);
   }
-  .screen-heading .eyebrow {
+  .screen-heading .screen-progress {
     margin-bottom: 2px;
     font-size: 8px;
   }
@@ -849,33 +857,20 @@ main {
     margin-top: 3px;
     font-size: 10px;
   }
-  .welcome-screen h1 {
-    font-size: clamp(24px, 4vw, 36px);
+  .welcome-screen {
+    row-gap: 10px;
   }
-  .welcome-instructions {
-    font-size: 11px;
-    gap: 4px;
+  .welcome-copy h1 {
+    font-size: clamp(1.9rem, 5.5vw, 3.7rem);
   }
-  .welcome-instructions p:first-child {
-    font-size: 14px;
-  }
-  .passport-emblem {
-    font-size: 15px;
-    padding: 12px;
-    gap: 5px;
-    width: 150px;
-  }
-  .passport-emblem svg {
-    width: 40px;
-    height: 40px;
+  .welcome-copy p {
+    margin-top: 8px;
   }
   .button {
-    min-height: 32px;
     padding: 6px 10px;
     font-size: 11px;
   }
   .screen-actions .button {
-    min-height: 32px;
     padding: 6px;
   }
   .reader-copy {
@@ -883,7 +878,6 @@ main {
     line-height: 1.45;
   }
   .reader-pagination .button {
-    min-height: 24px;
     padding: 1px 8px;
   }
   .reader-pagination {
@@ -910,7 +904,7 @@ main {
     font-size: 14px;
   }
   .city-choices small {
-    font-size: 8px;
+    font-size: 10px;
   }
   .destination-preview {
     padding: 8px;
@@ -950,9 +944,9 @@ main {
 }
 
 @media (max-width: 400px) and (max-height: 520px) {
-  .city-choices {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(6, minmax(0, 1fr));
+  .destination-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
   }
 }
 .city-choices .button > span {
@@ -1005,13 +999,13 @@ main {
 .passport-compass {
   width: 48px;
   height: 48px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .passport-caption,
 .passport-page-number {
   font-size: 9px;
   letter-spacing: 0.13em;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
   text-align: center;
 }
 .passport-identity h2 {
@@ -1035,18 +1029,18 @@ main {
   gap: 6px;
 }
 .earned-stamps span {
-  border: 1px dashed #536457;
+  border: 1px dashed var(--md-sys-color-on-surface-variant);
   padding: 5px 7px;
   font-size: 10px;
-  color: #536457;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .stamp-impression {
   width: min(94%, 210px);
   aspect-ratio: 1;
   max-height: calc(100% - 36px);
-  border: 3px double var(--terracotta);
+  border: 3px double var(--stamp);
   border-radius: 50%;
-  color: var(--terracotta);
+  color: var(--stamp);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1088,7 +1082,7 @@ main {
   position: absolute;
   width: 100px;
   height: 100px;
-  border: 2px solid var(--terracotta);
+  border: 2px solid var(--stamp);
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
@@ -1228,7 +1222,7 @@ main {
   position: absolute;
   width: 100%;
   height: 100%;
-  color: #a4ae96;
+  color: var(--md-sys-color-outline-variant);
 }
 .journey-end-line {
   stroke: currentColor;
@@ -1236,7 +1230,7 @@ main {
   animation: journey-route-close 1.6s ease both;
 }
 .journey-end-marker {
-  stroke: var(--terracotta);
+  stroke: var(--stamp);
   stroke-width: 2;
   fill: var(--paper);
   transform-box: fill-box;
@@ -1264,7 +1258,7 @@ main {
   background: var(--ink);
   border-radius: 4px 12px 12px 4px;
   padding: 10px;
-  color: #d8c49b;
+  color: var(--gold);
   transform-origin: left center;
   transform: rotateY(0deg);
   animation: journey-passport-close 1.5s cubic-bezier(0.2, 0.65, 0.3, 1) both;
@@ -1292,9 +1286,6 @@ main {
 }
 .journey-end-cover-border > .journey-end-star {
   font-size: 12px;
-}
-.ending-screen.is-failed > .screen-heading {
-  animation: journey-ending-arrive 0.55s ease both;
 }
 @keyframes journey-passport-close {
   from {
@@ -1328,16 +1319,6 @@ main {
   100% {
     opacity: 1;
     transform: scale(1);
-  }
-}
-@keyframes journey-ending-arrive {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 @media (max-width: 640px) and (min-height: 521px) {
@@ -1374,8 +1355,7 @@ main {
   .journey-end-line {
     opacity: 1;
   }
-  .journey-end-marker,
-  .ending-screen.is-failed > .screen-heading {
+  .journey-end-marker {
     opacity: 1;
     transform: none;
   }
@@ -1387,7 +1367,7 @@ main {
 }
 .destination-preview,
 .scene-reading,
-.welcome-instructions {
+.welcome-copy {
   min-width: 0;
   overflow-wrap: anywhere;
 }

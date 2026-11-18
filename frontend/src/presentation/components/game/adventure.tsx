@@ -41,15 +41,8 @@ export function Adventure({
   const question = game.question;
   if (game.phase === "finished")
     return (
-      <section
-        className={`screen ending-screen ${game.status === "failed" ? "is-failed" : ""}`}
-      >
+      <section className="screen ending-screen">
         <div className="screen-heading">
-          <p className="eyebrow">
-            {game.status === "completed"
-              ? "Pasaporte completo"
-              : "Una pausa en el camino"}
-          </p>
           <h1 data-screen-title tabIndex={-1}>
             {game.status === "completed"
               ? "Hay viajes que se quedan contigo."
@@ -97,8 +90,8 @@ export function Adventure({
     return (
       <section className="screen challenge-screen">
         <div className="screen-heading">
-          <p className="eyebrow">
-            {city.name} · Pregunta {game.questionNumber} de 3
+          <p className="screen-progress">
+            {city.name}, pregunta {game.questionNumber} de 3
           </p>
           <h1 data-screen-title tabIndex={-1}>
             {question.prompt}
@@ -109,10 +102,7 @@ export function Adventure({
             Elige una respuesta con las flechas y confirma con Enter
           </legend>
           {question.options.map((option, index) => (
-            <label
-              key={option.id}
-              className={`answer-option ${optionId === option.id ? "chosen" : ""}`}
-            >
+            <label key={option.id} className="answer-option">
               <input
                 data-choice
                 type="radio"
@@ -154,8 +144,8 @@ export function Adventure({
   return (
     <section className="screen exploration-screen">
       <div className="screen-heading">
-        <p className="eyebrow">
-          Destino {game.itinerary.length} de 3 · Escena {sceneIndex + 1} de 3
+        <p className="screen-progress">
+          Destino {game.itinerary.length} de 3, escena {sceneIndex + 1} de 3
         </p>
         <h1 data-screen-title tabIndex={-1}>
           {city.name}

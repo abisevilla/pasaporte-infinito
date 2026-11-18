@@ -58,17 +58,9 @@ export function DestinationPicker({
   return (
     <section className="screen destination-screen">
       <div className="screen-heading">
-        <p className="eyebrow">
-          {travel
-            ? "Sello conseguido · Próximo tramo"
-            : "Tu viaje, tus coordenadas"}
-        </p>
         <h1 data-screen-title tabIndex={-1}>
-          {travel ? "Traza el siguiente tramo" : "Elige dónde comienza todo"}
+          {travel ? "Elige tu próxima ciudad" : "Elige tu ciudad de origen"}
         </h1>
-        <p className="screen-description">
-          ↑ ↓ ← → eligen ciudad · Enter confirma tu viaje.
-        </p>
       </div>
       <div className="destination-layout">
         <div
@@ -79,7 +71,7 @@ export function DestinationPicker({
           {cities.map((city) => (
             <Button
               key={city.id}
-              variant="outline"
+              variant="ghost"
               data-choice
               disabled={
                 pending || (!!city.mapStatus && city.mapStatus !== "available")
@@ -100,23 +92,18 @@ export function DestinationPicker({
             <>
               <LandmarkArt cityId={selected.id} />
               <div>
-                <p className="eyebrow">{selected.country}</p>
                 <h2>{selected.name}</h2>
-                <p>{selected.landmark}</p>
+                <p>
+                  {selected.landmark}, {selected.country}
+                </p>
                 <p className="destination-tagline">{selected.tagline}</p>
               </div>
             </>
           ) : (
-            <>
-              <LandmarkArt cityId="paris" />
-              <div>
-                <h2>Un mundo por descubrir</h2>
-                <p>
-                  Elige una ciudad con las flechas o con un clic. Ningún origen
-                  está preseleccionado.
-                </p>
-              </div>
-            </>
+            <div>
+              <h2>Elige una ciudad</h2>
+              <p>Aquí podrás ver su monumento antes de confirmar el viaje.</p>
+            </div>
           )}
         </article>
       </div>

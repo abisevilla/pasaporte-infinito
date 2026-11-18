@@ -18,7 +18,6 @@ export function Sources({
   return (
     <section className="screen sources-screen">
       <div className="screen-heading">
-        <p className="eyebrow">Archivo documental</p>
         <h1 data-screen-title tabIndex={-1}>
           Fuentes de la escena
         </h1>
@@ -64,18 +63,15 @@ export function Journal({
   return (
     <section className="screen journal-screen">
       <div className="screen-heading">
-        <p className="eyebrow">
-          Archivo personal ·{" "}
-          {entries.length ? `${index + 1} / ${entries.length}` : "Sin entradas"}
-        </p>
         <h1 data-screen-title tabIndex={-1}>
           Tu cuaderno de viaje
         </h1>
-        <p className="screen-description">
-          {entry
-            ? `${entry.city.name} · ${entry.city.stamped ? "Sello conseguido" : "En exploración"}`
-            : "Registra escenas para conservarlas aquí."}
-        </p>
+        {entry && (
+          <p className="screen-description">
+            Entrada {index + 1} de {entries.length}. {entry.city.name}
+            {entry.city.stamped ? " (sello conseguido)." : "."}
+          </p>
+        )}
       </div>
       {entry ? (
         <>

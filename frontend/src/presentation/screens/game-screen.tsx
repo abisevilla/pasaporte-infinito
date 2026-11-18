@@ -6,6 +6,7 @@ import type { GameAction } from "@/shared/types";
 import { useKeyboardNavigation } from "../hooks/use-keyboard-navigation";
 import { Button } from "../components/ui/button";
 import { ConfirmDialog } from "../components/ui/confirm-dialog";
+import { AtlanticChart } from "../components/game/atlantic-chart";
 import { AtlasMap } from "../components/game/atlas-map";
 import { Adventure } from "../components/game/adventure";
 import { DestinationPicker } from "../components/game/destination-picker";
@@ -206,47 +207,19 @@ export function GameScreen() {
   else if (view === "welcome")
     content = (
       <section className="screen welcome-screen">
-        <div className="screen-heading">
-          <p className="eyebrow">Una aventura cultural · A tu ritmo</p>
+        <div className="welcome-copy">
           <h1 data-screen-title tabIndex={-1}>
             Seis ciudades. Tres sellos.
-            <br />
-            <em>Tu propio camino.</em>
           </h1>
+          <p>
+            Elige tu punto de partida y recorre tres ciudades. Explora sus
+            monumentos y responde preguntas para sellar tu pasaporte.
+          </p>
         </div>
-        <div className="welcome-body">
-          <div className="passport-emblem" aria-hidden="true">
-            <Compass size={70} />
-            <span>
-              PASAPORTE
-              <br />
-              INFINITO
-            </span>
-          </div>
-          <div className="welcome-instructions">
-            <p>
-              Elige tu origen, explora tres ciudades y reúne los sellos de tu
-              viaje.
-            </p>
-            <p>
-              <kbd>↑</kbd> <kbd>↓</kbd> elegir · <kbd>←</kbd> <kbd>→</kbd>{" "}
-              avanzar o volver
-            </p>
-            <p>
-              <kbd>Enter</kbd> confirmar · <kbd>Esc</kbd> volver
-            </p>
-            <p>
-              <kbd>H</kbd> ayuda · <kbd>J</kbd> cuaderno · <kbd>Tab</kbd>{" "}
-              recorrer controles
-            </p>
-          </div>
-        </div>
+        <AtlanticChart cities={catalog.data.cities} />
         <div className="screen-actions">
-          <Button asChild variant="outline">
-            <Link {...screenLink("help")}>Controles y reglas</Link>
-          </Button>
           {game && (
-            <Button asChild variant="outline">
+            <Button asChild variant="tonal">
               <Link to={screenUrl("home")} replace>
                 Reanudar viaje
               </Link>
@@ -276,7 +249,6 @@ export function GameScreen() {
     content = (
       <section className="screen">
         <div className="screen-heading">
-          <p className="eyebrow">Teclado, ratón o pantalla táctil</p>
           <h1 data-screen-title tabIndex={-1}>
             Controles y reglas
           </h1>
@@ -384,11 +356,6 @@ export function GameScreen() {
     content = (
       <section className="screen feedback-screen">
         <div className="screen-heading">
-          <p className="eyebrow">
-            {game.feedback.correct
-              ? "Un detalle más en tu cuaderno"
-              : `Errores en esta ciudad: ${game.cityErrors} / 3`}
-          </p>
           <h1 data-screen-title tabIndex={-1}>
             {game.feedback.correct
               ? "¡Respuesta correcta!"
@@ -433,9 +400,9 @@ export function GameScreen() {
     );
   return (
     <div className="app-shell" ref={root}>
-      <a className="skip-link button button-primary" href="#main">
-        Saltar al contenido
-      </a>
+      <Button asChild className="skip-link">
+        <a href="#main">Saltar al contenido</a>
+      </Button>
       <header className="site-header">
         <Link
           replace={view === "welcome"}
@@ -445,7 +412,7 @@ export function GameScreen() {
           aria-label="Ir al inicio"
         >
           <Compass aria-hidden="true" size={25} />
-          <span translate="no">PASAPORTE INFINITO</span>
+          <span translate="no">Pasaporte Infinito</span>
         </Link>
         <nav aria-label="Menú del juego">
           <Button

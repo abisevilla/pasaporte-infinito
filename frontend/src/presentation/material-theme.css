@@ -1,0 +1,50 @@
+:root {
+  --md-sys-color-primary: #295d77;
+  --md-sys-color-on-primary: #fff;
+  --md-sys-color-primary-container: #cbe6f7;
+  --md-sys-color-on-primary-container: #15394e;
+  --md-sys-color-secondary-container: #d8ebe6;
+  --md-sys-color-on-secondary-container: #1f4540;
+  --md-sys-color-tertiary: #823653;
+  --md-sys-color-error: #a52a24;
+  --md-sys-color-on-error: #fff;
+  --md-sys-color-surface: #f7faff;
+  --md-sys-color-on-surface: #182d3b;
+  --md-sys-color-on-surface-variant: #445766;
+  --md-sys-color-surface-container: #e8eff5;
+  --md-sys-color-surface-container-high: #e1ebf3;
+  --md-sys-color-outline: #6b7c89;
+  --md-sys-color-outline-variant: #bdcbd5;
+  --md-sys-color-scrim: rgb(16 33 46 / 60%);
+  --md-sys-shape-small: 8px;
+  --md-sys-shape-medium: 12px;
+  --md-sys-shape-large: 16px;
+  --md-sys-shape-extra-large: 28px;
+  --md-sys-shape-full: 9999px;
+  --md-sys-elevation-1: 0 1px 3px rgb(24 45 59 / 16%);
+  --md-sys-elevation-3: 0 8px 24px rgb(24 45 59 / 24%);
+  --md-sys-motion-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-short: 150ms;
+  --md-sys-target: 48px;
+  --md-sys-font-ui: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --md-sys-font-story:
+    Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --md-sys-type-display: clamp(2.25rem, 5vw, 3.5625rem);
+  --md-sys-type-headline: clamp(1.5rem, 3vw, 2rem);
+  --md-sys-type-title: clamp(1.125rem, 2.4vw, 1.375rem);
+  --md-sys-type-label: 0.875rem;
+  --md-sys-type-label-small: 0.75rem;
+
+  /* Colores de la cartografía y del pasaporte ilustrado. */
+  --ink: #19324a;
+  --paper: var(--md-sys-color-surface);
+  --ocean: #dce8f3;
+  --land: #b9cdc7;
+  --stamp: var(--md-sys-color-tertiary);
+  --gold: #e8c987;
+  --coast: #7c9994;
+  --sun: var(--gold);
+  --stone: #bdc9cf;
+  --land-soft: #cedde4;
+  --glass: #9fbccf;
+}

@@ -92,13 +92,15 @@ export function AtlasMap({
       <div className="atlas-toolbar">
         <div className="map-tabs" role="group" aria-label="Vista del mapa">
           {Object.entries(views).map(([id, item]) => (
-            <button
+            <Button
               key={id}
+              variant="outline"
+              size="small"
               aria-pressed={view === id}
               onClick={() => onRegionChange?.(id)}
             >
               {item.label}
-            </button>
+            </Button>
           ))}
         </div>
         <select
@@ -166,7 +168,7 @@ export function AtlasMap({
               className="ocean-label"
               transform="rotate(-15 340 280)"
             >
-              OCÉANO ATLÁNTICO
+              Océano Atlántico
             </text>
           )}
           {cities.map((city) => {

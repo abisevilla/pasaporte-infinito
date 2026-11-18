@@ -15,7 +15,7 @@ export function PassportStamp({
   return (
     <section className="screen stamp-screen" aria-label="Sello del pasaporte">
       <div className="screen-heading">
-        <p className="eyebrow">
+        <p className="screen-progress">
           Destino completado · {game.stamps.length} de 3 sellos
         </p>
         <h1 data-screen-title tabIndex={-1}>

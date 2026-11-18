@@ -6,9 +6,11 @@ import { cn } from "@/shared/utils";
 const buttonVariants = cva("button", {
   variants: {
     variant: {
-      default: "button-primary",
-      outline: "button-outline",
-      ghost: "button-ghost",
+      default: "button-filled",
+      tonal: "button-tonal",
+      danger: "button-error",
+      outline: "button-outlined",
+      ghost: "button-text",
     },
     size: { default: "", icon: "button-icon", small: "button-small" },
   },
