@@ -54,6 +54,18 @@ ruta y una entrada suave del mensaje cada vez que se abre, también al volver de
 o recuperar una partida terminada. Los botones permanecen disponibles durante el efecto;
 con movimiento reducido se muestra la ilustración estática.
 
+## Skills aplicadas al frontend
+
+| Skill | Cambios en el proyecto |
+| --- | --- |
+| [`web-design-guidelines`](.agents/skills/web-design-guidelines/SKILL.md) | Mejoras en la navegación por teclado, el foco visible, el enlace para saltar al contenido y los controles del atlas sin gestos. |
+| [`frontend-design`](.agents/skills/frontend-design/SKILL.md) | Portada con un mapa del Atlántico que muestra los seis destinos del juego, una jerarquía tipográfica común y una vista previa del monumento al elegir ciudad. |
+| [`google-material-design`](.agents/skills/google-material-design/SKILL.md) | Tokens Material para color, tipografía, forma, elevación y movimiento, con variantes de botones y estados de interacción compartidos. |
+| [`ui-ux-designer`](.agents/skills/ui-ux-designer/SKILL.md) | Recuperación de respuestas tras un fallo de red, atajos configurables, retorno de foco y continuidad de lectura al cambiar la orientación. |
+
+El archivo [`skills-lock.json`](skills-lock.json) registra el repositorio de origen y la
+revisión de cada skill.
+
 ## Ejecutar en local
 
 Requisitos comprobados: Python **3.15.2**, Node **24** y npm. Desde la raíz:
