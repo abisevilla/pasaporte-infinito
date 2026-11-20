@@ -16,6 +16,10 @@ export function Adventure({
   sourcesLink,
   onRestart,
   journalLink,
+  answerError,
+  failedOptionId,
+  onRetryAnswer,
+  retryLabel,
 }: {
   game: Game;
   readingSceneId: string | null;
@@ -25,6 +29,10 @@ export function Adventure({
   sourcesLink: (sceneId: string) => LinkProps;
   onRestart: () => void;
   journalLink: LinkProps;
+  answerError?: string;
+  failedOptionId?: string;
+  onRetryAnswer: () => void;
+  retryLabel: string;
 }) {
   const firstUnread = game.scenes.findIndex(
     (scene) => !game.exploredSceneIds.includes(scene.id),
@@ -39,6 +47,11 @@ export function Adventure({
   const city = game.cities.find((city) => city.id === game.currentCityId)!;
   const scene = game.scenes[sceneIndex];
   const question = game.question;
+  const selectedOption = failedOptionId ?? optionId;
+  const registered = !!scene && game.exploredSceneIds.includes(scene.id);
+  const registeredCount = game.scenes.filter((item) =>
+    game.exploredSceneIds.includes(item.id),
+  ).length;
   if (game.phase === "finished")
     return (
       <section className="screen ending-screen">
@@ -109,7 +122,8 @@ export function Adventure({
                 name="answer"
                 autoComplete="off"
                 value={option.id}
-                checked={optionId === option.id}
+                checked={selectedOption === option.id}
+                disabled={!!failedOptionId}
                 onChange={() => setOptionId(option.id)}
               />
               <span>
@@ -118,25 +132,38 @@ export function Adventure({
             </label>
           ))}
         </fieldset>
+        {answerError && (
+          <p className="decision-error" id="answer-error" role="alert">
+            {answerError}
+          </p>
+        )}
         <div className="screen-actions">
           <Button asChild variant="outline">
-            <Link {...journalLink}>Repasar cuaderno</Link>
+            <Link id="review-journal" {...journalLink}>
+              Repasar cuaderno
+            </Link>
           </Button>
           <Button
             data-primary
-            disabled={!optionId || pending}
+            disabled={!selectedOption || pending}
+            aria-describedby={answerError ? "answer-error" : undefined}
             onClick={() => {
-              if (optionId) {
+              if (answerError) {
+                onRetryAnswer();
+              } else if (selectedOption) {
                 decide({
                   type: "answerQuestion",
                   questionId: question.id,
-                  optionId,
+                  optionId: selectedOption,
                 });
-                setOptionId(null);
               }
             }}
           >
-            {pending ? "Comprobando…" : "Comprobar respuesta"}
+            {pending
+              ? "Comprobando…"
+              : answerError
+                ? retryLabel
+                : "Comprobar respuesta"}
           </Button>
         </div>
       </section>
@@ -145,7 +172,8 @@ export function Adventure({
     <section className="screen exploration-screen">
       <div className="screen-heading">
         <p className="screen-progress">
-          Destino {game.itinerary.length} de 3, escena {sceneIndex + 1} de 3
+          Destino {game.itinerary.length} de 3, escena {sceneIndex + 1} de 3.{" "}
+          {registeredCount} de {game.scenes.length} registradas.
         </p>
         <h1 data-screen-title tabIndex={-1}>
           {city.name}
@@ -178,11 +206,13 @@ export function Adventure({
           ← Anterior
         </Button>
         <Button asChild variant="outline">
-          <Link {...sourcesLink(scene.id)}>Fuentes</Link>
+          <Link id="scene-sources" {...sourcesLink(scene.id)}>
+            Fuentes
+          </Link>
         </Button>
         <Button
           data-primary
-          disabled={pending}
+          disabled={pending || registered}
           onClick={() =>
             decide({ type: "exploreScene", sceneId: scene.id }, (updated) => {
               const next = updated.scenes.findIndex(
@@ -192,7 +222,11 @@ export function Adventure({
             })
           }
         >
-          {pending ? "Guardando…" : `Registrar escena ${sceneIndex + 1} de 3`}
+          {pending
+            ? "Guardando…"
+            : registered
+              ? "Escena registrada"
+              : `Registrar escena ${sceneIndex + 1} de 3`}
         </Button>
         <Button
           data-screen-next

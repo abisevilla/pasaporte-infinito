@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import landData from "@/assets/land.geojson?raw";
 import type { City, Game } from "@/shared/types";
+import { destinationStatus } from "./destination-status";
 import { Button } from "../ui/button";
 
 type MapCity = City & { mapStatus?: Game["cities"][number]["mapStatus"] };
@@ -120,6 +121,7 @@ export function AtlasMap({
           {cities.map((city) => (
             <option key={city.id} value={city.id} disabled={!canSelect(city)}>
               {city.name}
+              {city.mapStatus ? ` (${destinationStatus[city.mapStatus]})` : ""}
             </option>
           ))}
         </select>

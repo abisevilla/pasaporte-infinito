@@ -11,9 +11,12 @@ export function PagedReader({
 }) {
   const viewport = useRef<HTMLDivElement>(null);
   const probe = useRef<HTMLDivElement>(null);
-  const [pages, setPages] = useState<string[]>([text]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const current = Math.min(pageIndex, pages.length - 1);
+  const [pages, setPages] = useState([{ start: 0, text }]);
+  const [anchor, setAnchor] = useState(0);
+  const current = pages.reduce(
+    (index, page, position) => (page.start <= anchor ? position : index),
+    0,
+  );
   useEffect(() => {
     const area = viewport.current;
     const measure = probe.current;
@@ -24,7 +27,7 @@ export function PagedReader({
       const pageHeight = area.clientHeight;
       if (pageHeight < 1) return;
       const characters = Array.from(text);
-      const nextPages: string[] = [];
+      const nextPages: { start: number; text: string }[] = [];
       let start = 0;
       while (start < characters.length) {
         let low = start + 1;
@@ -43,11 +46,11 @@ export function PagedReader({
         const boundary = candidate.search(/\s+\S*$/);
         if (end < characters.length && boundary > candidate.length * 0.65)
           end = start + Array.from(candidate.slice(0, boundary + 1)).length;
-        nextPages.push(characters.slice(start, end).join(""));
+        nextPages.push({ start, text: characters.slice(start, end).join("") });
         start = end;
       }
       measure.textContent = "";
-      setPages(nextPages.length ? nextPages : [""]);
+      setPages(nextPages.length ? nextPages : [{ start: 0, text: "" }]);
     }
     const observer = new ResizeObserver(paginate);
     observer.observe(area);
@@ -61,7 +64,7 @@ export function PagedReader({
     <section className="paged-reader" aria-label={label}>
       <div ref={viewport} className="reader-viewport">
         <div className="reader-copy" aria-live="polite">
-          {pages[current]}
+          {pages[current].text}
         </div>
         <div
           ref={probe}
@@ -75,7 +78,7 @@ export function PagedReader({
           size="small"
           data-page-prev
           disabled={current === 0}
-          onClick={() => setPageIndex(current - 1)}
+          onClick={() => setAnchor(pages[current - 1].start)}
           aria-label="Página de texto anterior"
         >
           ←
@@ -88,7 +91,7 @@ export function PagedReader({
           size="small"
           data-page-next
           disabled={current === pages.length - 1}
-          onClick={() => setPageIndex(current + 1)}
+          onClick={() => setAnchor(pages[current + 1].start)}
           aria-label="Página de texto siguiente"
         >
           →

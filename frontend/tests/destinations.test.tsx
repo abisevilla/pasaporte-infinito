@@ -45,7 +45,9 @@ describe("Selección accesible del mapa", () => {
     const control = screen.getByRole("combobox", {
       name: "Elegir ciudad en el mapa",
     });
-    expect(screen.getByRole("option", { name: "Madrid" })).toBeDisabled();
+    expect(
+      screen.getByRole("option", { name: "Madrid (Bloqueada)" }),
+    ).toBeDisabled();
     fireEvent.change(control, { target: { value: "madrid" } });
     expect(choose).not.toHaveBeenCalled();
   });

@@ -57,6 +57,11 @@ test("tres ciudades, epílogo y cuaderno", async ({ page }, info) => {
         page.getByRole("heading", { name: "¡Respuesta correcta!" }),
       ).toBeVisible();
       await fitsViewport(page);
+      const stamp = page.getByRole("button", { name: "Ver sello →" });
+      if (index === 0 && (await stamp.isVisible())) {
+        await page.reload();
+        await expect(stamp).toBeVisible();
+      }
       await page
         .getByRole("button", { name: /^(Ver sello|Seguir el viaje) →$/ })
         .click();
@@ -69,6 +74,7 @@ test("tres ciudades, epílogo y cuaderno", async ({ page }, info) => {
         `Has superado el desafío de ${name}. Su sello ya está en tu pasaporte.`,
       ),
     ).toBeVisible();
+    if (index === 0) await page.reload();
     await expect(page.locator(".stamp-impression strong")).toHaveText(name);
     await fitsViewport(page);
     if (index === 1) {

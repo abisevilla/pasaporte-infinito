@@ -2,16 +2,10 @@ import { Link, type LinkProps } from "react-router-dom";
 import type { City, Game } from "@/shared/types";
 import { ConfirmDialog } from "../ui/confirm-dialog";
 import { Button } from "../ui/button";
+import { destinationStatus } from "./destination-status";
 import { LandmarkArt } from "./landmark-art";
 
 type Destination = City & { mapStatus?: Game["cities"][number]["mapStatus"] };
-const labels = {
-  current: "Estás aquí",
-  available: "Disponible",
-  visited: "Visitada",
-  locked: "Bloqueada",
-  discarded: "Descartada",
-};
 
 export function DestinationPicker({
   cities,
@@ -77,12 +71,15 @@ export function DestinationPicker({
                 pending || (!!city.mapStatus && city.mapStatus !== "available")
               }
               aria-label={`Seleccionar ${city.name}`}
+              aria-describedby={`destination-status-${city.id}`}
               aria-pressed={selectedId === city.id}
               onClick={() => onSelect(city.id)}
             >
               <span>{city.name}</span>
-              <small>
-                {city.mapStatus ? labels[city.mapStatus] : city.country}
+              <small id={`destination-status-${city.id}`}>
+                {city.mapStatus
+                  ? destinationStatus[city.mapStatus]
+                  : city.country}
               </small>
             </Button>
           ))}

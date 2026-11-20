@@ -22,22 +22,26 @@ export function Sources({
           Fuentes de la escena
         </h1>
       </div>
-      <PagedReader
-        key={scene.id}
-        label="Fuentes"
-        text={`${scene.title}\n\n${scene.sources.map((source) => `${source.title}\nRevisada: ${reviewDateFormat.format(new Date(source.reviewedAt))}\n${source.url}`).join("\n\n")}`}
-      />
+      <div className="source-list">
+        <h2>{scene.title}</h2>
+        <ul>
+          {scene.sources.map((source) => (
+            <li key={source.url}>
+              <a href={source.url} target="_blank" rel="noreferrer">
+                {source.title}
+              </a>
+              <p>
+                Revisada el{" "}
+                {reviewDateFormat.format(new Date(source.reviewedAt))}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="screen-actions">
         <Button data-primary onClick={onBack}>
           Volver a la lectura
         </Button>
-        {scene.sources.map((source, index) => (
-          <Button asChild variant="outline" key={source.url}>
-            <a href={source.url} target="_blank" rel="noreferrer">
-              Abrir fuente {index + 1} ↗
-            </a>
-          </Button>
-        ))}
       </div>
     </section>
   );
@@ -101,7 +105,9 @@ export function Journal({
         </Button>
         {entry && (
           <Button asChild variant="outline">
-            <Link {...sourcesLink(entry.scene.id)}>Fuentes</Link>
+            <Link id="scene-sources" {...sourcesLink(entry.scene.id)}>
+              Fuentes
+            </Link>
           </Button>
         )}
         <Button

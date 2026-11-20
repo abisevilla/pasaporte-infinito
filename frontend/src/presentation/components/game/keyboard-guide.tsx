@@ -1,4 +1,8 @@
-export function KeyboardGuide() {
+export function KeyboardGuide({
+  shortcutsEnabled,
+}: {
+  shortcutsEnabled: boolean;
+}) {
   return (
     <div className="keyboard-guide" aria-label="Controles de teclado">
       <span>
@@ -15,9 +19,11 @@ export function KeyboardGuide() {
       <span>
         <kbd>Esc</kbd> volver
       </span>
-      <span>
-        <kbd>H</kbd> ayuda · <kbd>J</kbd> cuaderno
-      </span>
+      {shortcutsEnabled && (
+        <span>
+          <kbd>H</kbd> ayuda · <kbd>J</kbd> cuaderno
+        </span>
+      )}
     </div>
   );
 }

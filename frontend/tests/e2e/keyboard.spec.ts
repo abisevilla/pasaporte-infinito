@@ -41,6 +41,11 @@ test("aventura con teclado, ayuda, fuentes, cuaderno y diálogo", async ({
   await expect(
     page.getByRole("button", { name: "Registrar escena 2 de 3" }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "← Anterior" }).click();
+  await expect(
+    page.getByRole("button", { name: "Escena registrada" }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Siguiente →" }).click();
   await page.keyboard.press("j");
   await expect(
     page.getByRole("heading", { name: "Tu cuaderno de viaje" }),
@@ -55,11 +60,14 @@ test("aventura con teclado, ayuda, fuentes, cuaderno y diálogo", async ({
   await expect(
     page.getByRole("heading", { name: "Tu cuaderno de viaje" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Fuentes", exact: true }),
+  ).toBeFocused();
   await page.keyboard.press("j");
   await expect(
     page.getByRole("button", { name: "Registrar escena 2 de 3" }),
   ).toBeVisible();
-  await page.keyboard.press("Enter");
+  await page.getByRole("button", { name: "Registrar escena 2 de 3" }).click();
   await expect(
     page.getByRole("button", { name: "Registrar escena 3 de 3" }),
   ).toBeVisible();
@@ -129,7 +137,7 @@ test("pantallas pequeñas, texto paginado y ausencia de scroll", async ({
     }
     expect(text).toContain("El contenido largo");
     await page.keyboard.press("Escape");
-    await page.keyboard.press("ArrowRight");
+    await page.getByRole("link", { name: "Elegir mi origen →" }).click();
     await fitsViewport(page);
     await page.getByRole("link", { name: "Ver mapa" }).click();
     await fitsViewport(page);
@@ -162,4 +170,35 @@ test("pantallas pequeñas, texto paginado y ausencia de scroll", async ({
     });
     await page.context().clearCookies();
   }
+});
+
+test("conserva la posición del lector al cambiar la orientación", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 480 });
+  await page.goto("/");
+  await page.getByRole("button", { name: /Ayuda/ }).click();
+  const text = page.locator(".reader-copy:not(.reader-probe)");
+  const next = page.getByRole("button", { name: "Página de texto siguiente" });
+  const previous = page.getByRole("button", {
+    name: "Página de texto anterior",
+  });
+
+  await expect(next).toBeEnabled();
+  const firstPage = (await text.textContent()) ?? "";
+  await next.click();
+  await expect(text).not.toHaveText(firstPage);
+  await page.setViewportSize({ width: 640, height: 360 });
+  await fitsViewport(page);
+  const resizedPage = (await text.textContent()) ?? "";
+  let precedingLength = 0;
+  while (await previous.isEnabled()) {
+    await previous.click();
+    precedingLength += Array.from((await text.textContent()) ?? "").length;
+  }
+  const originalOffset = Array.from(firstPage).length;
+  expect(precedingLength).toBeLessThanOrEqual(originalOffset);
+  expect(precedingLength + Array.from(resizedPage).length).toBeGreaterThan(
+    originalOffset,
+  );
 });

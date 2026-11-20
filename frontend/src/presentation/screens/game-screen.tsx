@@ -41,7 +41,7 @@ function isScreen(value: string | null): value is Screen {
   return screens.some((screen) => screen === value);
 }
 const helpText =
-  "↑ / ↓: elegir una ciudad o respuesta. Si no hay opciones, mover el foco entre los controles.\n\n← / →: cambiar de escena, entrada del cuaderno o página de texto. En destinos cambian la ciudad seleccionada. Navegar por una escena no la registra.\n\nEnter: confirmar la opción elegida o activar el botón enfocado. Espacio: activar un botón o marcar una respuesta. Tab / Mayús + Tab: recorrer todos los controles.\n\nEscape o Retroceso: volver. H o ?: abrir esta ayuda. J: abrir o cerrar el cuaderno. Inicio / Fin: primera o última opción. Re Pág / Av Pág: cambiar de página de texto.\n\nTres escenas y tres preguntas por ciudad. Debes registrar las tres escenas para abrir el desafío. El tercer error en una ciudad termina la aventura; el contador se reinicia al viajar. Tres sellos completan tu itinerario.\n\nEl progreso se guarda en el servidor. Conserva la cookie de este navegador para recuperar tu partida. Puedes jugar con teclado, ratón o controles táctiles. El contenido largo se reparte en páginas, sin desplazamiento vertical.";
+  "↑ / ↓: elegir una ciudad o respuesta. Úsalas desde el encabezado o las opciones.\n\n← / →: cambiar de escena o entrada del cuaderno. Con el foco en la paginación, cambian de página. En destinos cambian la ciudad seleccionada. Navegar por una escena no la registra.\n\nEnter: confirmar la opción elegida o activar el botón enfocado. Espacio: activar un botón o marcar una respuesta. Tab / Mayús + Tab: recorrer todos los controles.\n\nEscape o Retroceso: volver. Si activas los atajos de carácter, H o ? abre esta ayuda y J abre o cierra el cuaderno. Inicio / Fin: primera o última opción. Re Pág / Av Pág: cambiar de página de texto.\n\nTres escenas y tres preguntas por ciudad. Debes registrar las tres escenas para abrir el desafío. El tercer error en una ciudad termina la aventura; el contador se reinicia al viajar. Tres sellos completan tu itinerario.\n\nEl progreso se guarda en el servidor. Conserva la cookie de este navegador para recuperar tu partida. Puedes jugar con teclado, ratón o controles táctiles. El contenido largo se reparte en páginas. En ventanas muy reducidas también puedes desplazar la pantalla.";
 
 export function GameScreen() {
   const state = useGame();
@@ -64,11 +64,30 @@ export function GameScreen() {
   const [mapSelection, setMapSelection] = useState<string | null>(null);
   const [readingSceneId, setReadingSceneId] = useState<string | null>(null);
   const [journalIndex, setJournalIndex] = useState(0);
-  const [earnedStamp, setEarnedStamp] = useState<{
-    gameId: string;
-    cityId: string;
-  } | null>(null);
+  const earnedStamp =
+    game?.feedback?.correct && game.stamps.includes(game.currentCityId)
+      ? game.currentCityId
+      : null;
   const root = useRef<HTMLDivElement>(null);
+  const returnFocusRef = useRef<string | null>(null);
+  const [shortcutsEnabled, setShortcutsEnabled] = useState(() => {
+    try {
+      return localStorage.getItem("atajos-de-caracter") !== "desactivados";
+    } catch {
+      return true;
+    }
+  });
+  function changeShortcuts(enabled: boolean) {
+    setShortcutsEnabled(enabled);
+    try {
+      localStorage.setItem(
+        "atajos-de-caracter",
+        enabled ? "activados" : "desactivados",
+      );
+    } catch {
+      // La preferencia sigue disponible durante la sesión actual.
+    }
+  }
   const needsGame = ["adventure", "journal", "feedback", "stamp"].includes(
     screen,
   );
@@ -77,32 +96,48 @@ export function GameScreen() {
     (!game && needsGame) ||
     (screen === "sources" && !sourceScene) ||
     (screen === "feedback" && !game?.feedback) ||
-    (screen === "stamp" && (!earnedStamp || earnedStamp.gameId !== game?.id))
+    (screen === "stamp" && !earnedStamp)
       ? game
         ? "adventure"
         : "welcome"
       : screen;
-  const error = catalog.error ?? current.error ?? create.error ?? action.error;
+  const failedRequest = action.variables?.request;
+  const failedAnswer =
+    failedRequest?.action.type === "answerQuestion" &&
+    failedRequest.gameId === game?.id &&
+    failedRequest.action.questionId === game?.question?.id
+      ? failedRequest.action
+      : null;
+  const answerError = failedAnswer ? action.error : null;
+  const answerConflict = !!answerError && state.actionConflict;
+  const error =
+    catalog.error ??
+    current.error ??
+    create.error ??
+    (failedRequest?.action.type === "answerQuestion" ? null : action.error);
+  const ready = !!catalog.data && current.isSuccess;
   function setScreen(next: Screen) {
     void navigate(screenUrl(next), { replace: true });
   }
-  function screenLink(next: Screen, sceneId?: string) {
+  function screenLink(next: Screen, sceneId?: string, focusId?: string) {
     return {
       to: screenUrl(next, sceneId, next === "map" && view === "destinations"),
-      state: { previous: view },
+      state: { previous: view, focusId },
     };
   }
-  function open(next: Screen) {
+  function open(next: Screen, focusId?: string) {
     if (next === view) return;
-    const { to, state } = screenLink(next);
+    const { to, state } = screenLink(next, undefined, focusId);
     void navigate(to, { state });
   }
   function back() {
-    if (previous) void navigate(-1);
-    else if (screen !== "home") setScreen("home");
+    if (previous) {
+      returnFocusRef.current = location.state?.focusId ?? null;
+      void navigate(-1);
+    } else if (screen !== "home") setScreen("home");
   }
   function sourcesLink(sceneId: string) {
-    return screenLink("sources", sceneId);
+    return screenLink("sources", sceneId, "scene-sources");
   }
   function newJourney() {
     setMapSelection(null);
@@ -129,7 +164,6 @@ export function GameScreen() {
           setMapSelection(null);
           setReadingSceneId(null);
           setJournalIndex(0);
-          setEarnedStamp(null);
           setScreen("home");
         },
       },
@@ -145,30 +179,32 @@ export function GameScreen() {
         setMapSelection(null);
         setReadingSceneId(null);
       }
-      if (decision.type === "answerQuestion") {
-        const newStamp = updated.stamps.find(
-          (cityId) => !game?.stamps.includes(cityId),
-        );
-        setEarnedStamp(
-          newStamp ? { gameId: updated.id, cityId: newStamp } : null,
-        );
-        setScreen("feedback");
-      }
+      if (decision.type === "answerQuestion")
+        showAnswerFeedback(updated, decision.questionId);
     });
+  }
+  function showAnswerFeedback(
+    updated: NonNullable<typeof game>,
+    questionId: string,
+  ) {
+    setScreen(
+      updated.feedback?.questionId === questionId ? "feedback" : "home",
+    );
   }
   useKeyboardNavigation({
     root,
-    screenKey: `${view}-${game?.phase}-${game?.currentCityId}-${game?.question?.id}-${!!error}`,
+    returnFocusRef,
+    shortcutsEnabled,
+    screenKey: `${view}-${game?.phase}-${game?.currentCityId}-${game?.question?.id}-${!!error}-${ready}`,
     onBack: back,
-    onHelp: () => (view === "help" ? back() : open("help")),
+    onHelp: () => (view === "help" ? back() : open("help", "help-trigger")),
     onJournal: () => {
       if (game) {
         if (view === "journal") back();
-        else open("journal");
+        else open("journal", "journal-trigger");
       }
     },
   });
-  const ready = catalog.data && current.isSuccess;
   let content;
   if (error)
     content = (
@@ -197,7 +233,7 @@ export function GameScreen() {
         </div>
       </section>
     );
-  else if (!ready)
+  else if (!catalog.data || !ready)
     content = (
       <section className="screen loading-state" role="status">
         <Compass aria-hidden="true" size={40} />
@@ -254,6 +290,14 @@ export function GameScreen() {
           </h1>
         </div>
         <PagedReader text={helpText} label="Ayuda" />
+        <label className="shortcut-preference">
+          <input
+            type="checkbox"
+            checked={shortcutsEnabled}
+            onChange={(event) => changeShortcuts(event.target.checked)}
+          />
+          Activar atajos H, J y ?
+        </label>
         <div className="screen-actions">
           <Button data-primary onClick={back}>
             Volver al juego
@@ -337,19 +381,20 @@ export function GameScreen() {
             : decide({ type: "chooseRoute", cityId: id })
         }
         mapLink={screenLink("map")}
-        onBack={view === "destinations" ? back : () => open("journal")}
+        onBack={
+          view === "destinations"
+            ? back
+            : () => open("journal", "journal-trigger")
+        }
       />
     );
-  else if (view === "stamp" && game && earnedStamp?.gameId === game.id)
+  else if (view === "stamp" && game && earnedStamp)
     content = (
       <PassportStamp
-        key={`${earnedStamp.gameId}-${earnedStamp.cityId}`}
+        key={`${game.id}-${earnedStamp}`}
         game={game}
-        cityId={earnedStamp.cityId}
-        onContinue={() => {
-          setEarnedStamp(null);
-          setScreen("home");
-        }}
+        cityId={earnedStamp}
+        onContinue={() => setScreen("home")}
       />
     );
   else if (view === "feedback" && game?.feedback)
@@ -368,18 +413,19 @@ export function GameScreen() {
         />
         <div className="screen-actions">
           <Button asChild variant="outline">
-            <Link {...screenLink("journal")}>Repasar cuaderno</Link>
+            <Link
+              id="review-journal"
+              {...screenLink("journal", undefined, "review-journal")}
+            >
+              Repasar cuaderno
+            </Link>
           </Button>
           <Button
             data-primary
             data-screen-next
-            onClick={() =>
-              setScreen(earnedStamp?.gameId === game.id ? "stamp" : "home")
-            }
+            onClick={() => setScreen(earnedStamp ? "stamp" : "home")}
           >
-            {earnedStamp?.gameId === game.id
-              ? "Ver sello →"
-              : "Seguir el viaje →"}
+            {earnedStamp ? "Ver sello →" : "Seguir el viaje →"}
           </Button>
         </div>
       </section>
@@ -387,7 +433,7 @@ export function GameScreen() {
   else if (game)
     content = (
       <Adventure
-        key={`${game.id}-${game.currentCityId}-${game.phase}`}
+        key={`${game.id}-${game.currentCityId}-${game.phase}-${game.question?.id ?? ""}`}
         game={game}
         readingSceneId={readingSceneId}
         onSceneChange={setReadingSceneId}
@@ -395,7 +441,20 @@ export function GameScreen() {
         decide={decide}
         sourcesLink={sourcesLink}
         onRestart={newJourney}
-        journalLink={screenLink("journal")}
+        journalLink={screenLink("journal", undefined, "review-journal")}
+        answerError={answerError?.message}
+        failedOptionId={answerError ? failedAnswer?.optionId : undefined}
+        retryLabel={answerConflict ? "Recuperar progreso" : "Reintentar"}
+        onRetryAnswer={async () => {
+          if (answerConflict) {
+            const result = await current.refetch();
+            if (result.isSuccess) action.reset();
+          } else if (failedAnswer) {
+            state.retryAnswer((updated) =>
+              showAnswerFeedback(updated, failedAnswer.questionId),
+            );
+          }
+        }}
       />
     );
   return (
@@ -418,19 +477,27 @@ export function GameScreen() {
           <Button
             variant="ghost"
             size="small"
-            onClick={() => (view === "help" ? back() : open("help"))}
+            id="help-trigger"
+            onClick={() =>
+              view === "help" ? back() : open("help", "help-trigger")
+            }
           >
-            Ayuda <kbd>H</kbd>
+            Ayuda {shortcutsEnabled && <kbd>H</kbd>}
           </Button>
           {game && (
             <>
               <Button
                 variant="ghost"
                 size="small"
-                onClick={() => (view === "journal" ? back() : open("journal"))}
+                id="journal-trigger"
+                onClick={() =>
+                  view === "journal"
+                    ? back()
+                    : open("journal", "journal-trigger")
+                }
                 aria-label="Abrir cuaderno de viaje"
               >
-                Cuaderno <kbd>J</kbd>
+                Cuaderno {shortcutsEnabled && <kbd>J</kbd>}
               </Button>
               <ConfirmDialog disabled={pending} onConfirm={newJourney} />
             </>
@@ -444,18 +511,24 @@ export function GameScreen() {
             {game.stamps.length}/3 sellos · {game.cityErrors}/3 errores
           </span>
           <span role="status">
-            {pending ? "Guardando…" : error ? "Sin confirmar" : "Guardado"}
+            {pending
+              ? "Guardando…"
+              : error || answerError
+                ? "Sin confirmar"
+                : "Guardado"}
           </span>
         </div>
       )}
-      <span className="sr-only" role="status">
-        {pending ? "Guardando progreso…" : ""}
-      </span>
+      {(!game || view === "welcome") && (
+        <span className="sr-only" role="status">
+          {pending ? "Guardando progreso…" : ""}
+        </span>
+      )}
       <main id="main" tabIndex={-1} aria-busy={pending}>
         {content}
       </main>
       <footer className="site-footer">
-        <KeyboardGuide />
+        <KeyboardGuide shortcutsEnabled={shortcutsEnabled} />
       </footer>
     </div>
   );

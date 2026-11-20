@@ -26,16 +26,18 @@ Los controles aparecen desde el inicio y permanecen disponibles en el pie de pan
 
 | Tecla | Acción |
 | --- | --- |
-| `↑` / `↓` | Elegir ciudad o respuesta; recorrer controles cuando no hay opciones |
-| `←` / `→` | Cambiar de página de texto, escena o entrada; en destinos, cambiar de ciudad |
+| `↑` / `↓` | Elegir ciudad o respuesta desde el encabezado o las opciones |
+| `←` / `→` | Cambiar de escena o entrada desde su encabezado o controles. Con el foco en el lector, cambiar de página. En destinos, cambiar de ciudad |
 | `Enter` | Confirmar una elección o activar el botón enfocado |
 | `Espacio` | Activar un botón o marcar una respuesta |
 | `Tab` / `Mayús + Tab` | Recorrer todos los controles, incluidos menús y enlaces |
 | `Escape` / `Retroceso` | Volver a la pantalla anterior; Escape cierra los diálogos |
-| `H` / `?` | Abrir o cerrar la ayuda |
-| `J` | Abrir o cerrar el cuaderno durante una partida |
+| `H` / `?` | Abrir o cerrar la ayuda si los atajos de carácter están activos |
+| `J` | Abrir o cerrar el cuaderno durante una partida si los atajos de carácter están activos |
 | `Inicio` / `Fin` | Primera o última opción |
 | `Re Pág` / `Av Pág` | Página de texto anterior o siguiente |
+
+Puedes desactivar los atajos de una sola tecla desde Ayuda.
 
 Cambiar de escena con las flechas solo permite leerla. `Registrar escena` guarda su
 exploración en el backend. Las respuestas requieren confirmación; mantener Enter pulsado

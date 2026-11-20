@@ -15,6 +15,13 @@
       "skillPath": "organizations/google/material-design/SKILL.md",
       "computedHash": "6eb79fe31a65f6e9404ca0d8950c4139de22e26edf887d1a4c5f9c0e9c3fca2c"
     },
+    "ui-ux-designer": {
+      "source": "sickn33/agentic-awesome-skills",
+      "commit": "12c0d66d3c007b8109edb0e7211812119be09d84",
+      "sourceType": "github",
+      "skillPath": "skills/ui-ux-designer/SKILL.md",
+      "computedHash": "1b30bd6d4abd780d37c4b2b072bd43cbe0d8d87ce5c94a7700986edebcd49e0b"
+    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "commit": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
